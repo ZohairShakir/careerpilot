@@ -7,12 +7,12 @@ const stages = [
 ];
 
 const faqs = [
-  ["What exactly will I receive?", "Three PDF downloads: the 67-page AI Job Search Blueprint, the AI-Ready Resume Template, and the Job Search Checklist."],
+  ["What exactly will I receive?", "One downloadable ZIP bundle containing three PDFs: the 67-page AI Job Search Blueprint, the AI-Ready Resume Template, and the Job Search Checklist."],
   ["Who is this bundle for?", "It is built for non-technical professionals, active job seekers, and career changers who want a clearer, more consistent process."],
   ["Which AI tools can I use?", "The prompts work with general-purpose AI assistants such as ChatGPT, Claude, or Gemini."],
   ["Is the résumé template editable?", "The current template is delivered as a PDF. You can use its structure as your guide when building your résumé in your preferred editor."],
   ["Does this guarantee a job?", "No. It provides a practical system and tools, but hiring outcomes depend on your experience, market, effort, and employer decisions."],
-  ["How do I access my files?", "After verified payment, your secure download links appear immediately. They are short-lived to protect the bundle."],
+  ["How do I access my files?", "After verified payment, a secure one-click bundle download appears immediately, with optional links for downloading each PDF separately. The links remain active for 15 minutes."],
 ];
 
 const structuredData = {

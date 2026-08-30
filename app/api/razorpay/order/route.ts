@@ -25,6 +25,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ orderId: order.id, amount: order.amount, currency: order.currency, keyId: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || process.env.RAZORPAY_KEY_ID });
   } catch (error) {
     console.error("Order creation failed", error instanceof Error ? error.message : error);
-    return NextResponse.json({ error: "Checkout is not configured yet. Add Razorpay Test Mode keys to continue." }, { status: 503 });
+    return NextResponse.json({ error: "Secure checkout is temporarily unavailable. Please try again shortly or contact arkzlab@gmail.com." }, { status: 503 });
   }
 }
