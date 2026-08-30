@@ -1,2 +1,4 @@
+import type { Metadata } from "next";
 import LegalPage from "../legal-page";
+export const metadata: Metadata = { title: "Terms of Use", description: "Terms governing use of the Career Pilot digital job search bundle.", alternates: { canonical: "/terms" } };
 export default function Page() { return <LegalPage title="Terms of use"><p>The Career Pilot bundle is a digital educational product for personal use. Purchasing it does not transfer copyright or permit resale, redistribution, or public sharing.</p><p>The bundle provides guidance and templates; it does not guarantee interviews, employment, salary outcomes, or acceptance by any employer.</p><p>This draft should be reviewed and updated with the final business identity and jurisdiction before launch.</p></LegalPage>; }

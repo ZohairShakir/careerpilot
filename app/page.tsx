@@ -15,6 +15,44 @@ const faqs = [
   ["How do I access my files?", "After verified payment, your secure download links appear immediately. They are short-lived to protect the bundle."],
 ];
 
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://careerpilot.store/#organization",
+      name: "Career Pilot",
+      url: "https://careerpilot.store",
+      email: "arkzlab@gmail.com",
+    },
+    {
+      "@type": "Product",
+      "@id": "https://careerpilot.store/#product",
+      name: "Career Pilot AI Job Search Bundle",
+      description: "A 67-page AI Job Search Blueprint with 50 guided prompts, an AI-ready resume template, and a practical job search checklist.",
+      image: "https://careerpilot.store/assets/career-pilot-bundle-white.png",
+      brand: { "@type": "Brand", name: "Career Pilot" },
+      category: "Digital career development resources",
+      offers: {
+        "@type": "Offer",
+        url: "https://careerpilot.store",
+        priceCurrency: "INR",
+        price: "499",
+        availability: "https://schema.org/InStock",
+        itemCondition: "https://schema.org/NewCondition",
+      },
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: faqs.map(([question, answer]) => ({
+        "@type": "Question",
+        name: question,
+        acceptedAnswer: { "@type": "Answer", text: answer },
+      })),
+    },
+  ],
+};
+
 function Mark() {
   return <span className="mark" aria-hidden="true">✦</span>;
 }
@@ -22,6 +60,7 @@ function Mark() {
 export default function Home() {
   return (
     <main>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }} />
       <header className="nav shell">
         <a className="wordmark" href="#top"><Mark />career pilot</a>
         <nav aria-label="Primary navigation">
