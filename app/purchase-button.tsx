@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import { analyticsContext, track } from "./analytics";
 
@@ -95,7 +96,7 @@ export default function PurchaseButton({ compact, light }: Props) {
 
   return <>
     <button className={`buy-button ${compact ? "compact" : ""} ${light ? "light" : ""}`} onClick={openModal}>{compact ? "Get the bundle" : "Get the complete bundle — ₹499"}</button>
-    {open ? <div className="modal-backdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && closeModal()}><section className="checkout-modal" role="dialog" aria-modal="true" aria-labelledby="checkout-title"><button className="close" aria-label="Close checkout" onClick={closeModal}>×</button>
+    {open ? createPortal(<div className="modal-backdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && closeModal()}><section className="checkout-modal" role="dialog" aria-modal="true" aria-labelledby="checkout-title"><button className="close" aria-label="Close checkout" onClick={closeModal}>×</button>
       {bundleUrl ? <div className="success">
         <div className="success-visual"><Image src="/assets/career-pilot-bundle-white.png" alt="Career Pilot bundle with the AI Job Search Blueprint, resume template and checklist" width={560} height={420} priority /></div>
         <div className="success-heading"><span className="success-mark" aria-hidden="true">✓</span><span>Payment successful</span></div>
@@ -109,6 +110,6 @@ export default function PurchaseButton({ compact, light }: Props) {
         </details>
         <p className="expiry-note">Download links expire in 15 minutes.</p>
       </div> : <><h2 id="checkout-title">Start moving with clarity.</h2><p className="modal-intro">Enter your details to continue to secure Razorpay checkout.</p><div className="modal-order"><span>Career Pilot AI Job Search Bundle</span><b>₹499</b></div><form onSubmit={submit}><label>Full name<input name="name" autoComplete="name" required minLength={2} /></label><label>Email address<input name="email" type="email" autoComplete="email" required /></label><button className="buy-button" disabled={loading}>{loading ? "Please wait…" : "Continue to secure payment"}</button>{error ? <p className="form-error">{error}</p> : null}<small>By continuing, you agree to our terms and digital delivery policy.</small></form></>}
-    </section></div> : null}
+    </section></div>, document.body) : null}
   </>;
 }
