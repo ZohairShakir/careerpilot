@@ -22,8 +22,10 @@ export async function POST(request: Request) {
     });
     const expiresAt = Date.now() + 15 * 60 * 1000;
     const labels = { blueprint: "AI Job Search Blueprint", resume: "AI-Ready Resume Template", checklist: "Job Search Checklist" };
-    const downloads = Object.keys(products).map(key => ({ label: labels[key as keyof typeof labels], url: `/api/download?token=${encodeURIComponent(createDownloadToken(paymentId, key as keyof typeof products, expiresAt))}` }));
-    return NextResponse.json({ downloads });
+    const productIds = Object.keys(labels) as Array<keyof typeof labels>;
+    const downloads = productIds.map(key => ({ label: labels[key], url: `/api/download?token=${encodeURIComponent(createDownloadToken(paymentId, key, expiresAt))}` }));
+    const bundleUrl = `/api/download?token=${encodeURIComponent(createDownloadToken(paymentId, "bundle", expiresAt))}`;
+    return NextResponse.json({ bundleUrl, downloads });
   } catch (error) {
     console.error("Payment verification failed", error instanceof Error ? error.message : error);
     return NextResponse.json({ error: "We could not confirm the payment." }, { status: 500 });

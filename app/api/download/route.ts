@@ -12,6 +12,6 @@ export async function GET(request: Request) {
     const product = products[data.product];
     const file = await readFile(path.join(process.cwd(), "products", product.filename));
     await bestEffort(() => supabaseRequest("rpc/record_bundle_download", { method: "POST", body: JSON.stringify({ payment_id: data.paymentId }) }));
-    return new NextResponse(file, { headers: { "Content-Type": "application/pdf", "Content-Disposition": `attachment; filename="${product.downloadName}"`, "Cache-Control": "private, no-store" } });
+    return new NextResponse(file, { headers: { "Content-Type": product.contentType, "Content-Disposition": `attachment; filename="${product.downloadName}"`, "Cache-Control": "private, no-store" } });
   } catch { return NextResponse.json({ error: "The file could not be downloaded." }, { status: 500 }); }
 }

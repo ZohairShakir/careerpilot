@@ -1,9 +1,10 @@
 import crypto from "node:crypto";
 
 export const products = {
-  blueprint: { filename: "THE AI JOB SEARCH BLUEPRINT.pdf", downloadName: "Career-Pilot-AI-Job-Search-Blueprint.pdf" },
-  resume: { filename: "AI-Ready Resume Template.pdf", downloadName: "Career-Pilot-AI-Ready-Resume-Template.pdf" },
-  checklist: { filename: "ai job search checklist.pdf", downloadName: "Career-Pilot-Job-Search-Checklist.pdf" },
+  bundle: { filename: "Career-Pilot-Complete-Bundle.zip", downloadName: "Career-Pilot-Complete-Bundle.zip", contentType: "application/zip" },
+  blueprint: { filename: "THE AI JOB SEARCH BLUEPRINT.pdf", downloadName: "Career-Pilot-AI-Job-Search-Blueprint.pdf", contentType: "application/pdf" },
+  resume: { filename: "AI-Ready Resume Template.pdf", downloadName: "Career-Pilot-AI-Ready-Resume-Template.pdf", contentType: "application/pdf" },
+  checklist: { filename: "ai job search checklist.pdf", downloadName: "Career-Pilot-Job-Search-Checklist.pdf", contentType: "application/pdf" },
 } as const;
 
 export type ProductId = keyof typeof products;
