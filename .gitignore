@@ -1,0 +1,7 @@
+node_modules
+.next
+npm-debug.log*
+
+# Local credentials and deployment secrets
+.env*
+!.env.example

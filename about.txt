@@ -1,0 +1,573 @@
+The AI Job Search Blueprint
+The core idea
+
+A practical AI-powered job-search system for non-technical professionals.
+
+Instead of using AI just to generate another generic resume or cover letter, the Blueprint uses 50 structured prompts to take someone through the entire job-search process — from understanding their value and finding the right roles to applications, LinkedIn, networking, interviews, salary negotiation, and follow-up.
+
+The book repeatedly emphasizes using AI without inventing qualifications, experience, achievements, or numbers.
+
+
+The book is organized into 10 sections and 50 prompts, followed by two bonus resources. The table of contents runs through the 10 sections from pages 2–61, with the bonuses on pages 62–65.
+
+01 — KNOW YOUR VALUE
+
+Prompts 01–05
+
+Before applying for jobs, the reader first figures out what they actually bring to the table.
+
+Includes:
+
+01 — Discover Your Transferable Skills
+Identify skills from existing experience that can transfer into other roles.
+
+02 — Find Your Professional Strengths
+Discover strengths, valuable skills, problems you're good at solving, and environments where you may perform best.
+
+03 — Turn Responsibilities Into Achievements
+Transform boring responsibility-based resume bullets into achievement-focused statements.
+
+04 — Find Your Professional Differentiator
+Identify what genuinely separates the candidate from people with similar backgrounds.
+
+05 — Create Your Professional Positioning Statement
+Create different versions of a professional introduction for networking, interviews, LinkedIn and resumes.
+
+The outcome:
+
+"I know what I bring to the table."
+
+02 — FIND THE RIGHT JOB
+
+Prompts 06–10
+
+This section prevents people from blindly applying to hundreds of jobs.
+
+Includes:
+
+06 — Discover Suitable Job Titles
+Generate realistic target roles and separate them into:
+
+Strong matches
+Adjacent roles
+Stretch roles
+
+07 — Find Adjacent Career Paths
+Discover realistic career transitions that build upon existing experience.
+
+08 — Decode a Job Description
+Break down complicated job descriptions into requirements, responsibilities, skills, terminology and what the employer is actually looking for.
+
+09 — Score Your Fit for a Job
+Evaluate how well the candidate matches a particular position.
+
+10 — Identify Your Skill Gaps
+Separate gaps into:
+
+Critical
+Important
+Nice to have
+
+and determine what to work on first.
+
+The outcome:
+
+"I know which jobs are actually worth pursuing."
+
+03 — BUILD YOUR RESUME
+
+Prompts 11–15
+
+This is the resume-building section.
+
+Includes:
+
+11 — Audit Your Resume
+Get a hiring-manager-style review covering clarity, relevance, impact, weak language, missing information and readability.
+
+12 — Write a Strong Professional Summary
+Generate different professional-summary versions.
+
+13 — Rewrite Your Experience Section
+Turn responsibilities into concise, action-oriented, achievement-focused bullets.
+
+14 — Find the Numbers in Your Experience
+Identify places where real metrics could strengthen the resume — revenue, customers, time saved, team size, projects, growth, efficiency, etc.
+
+15 — Build a Targeted Resume
+Adapt the existing resume specifically for a target job while keeping everything truthful.
+
+The outcome:
+
+"My resume actually communicates my value."
+
+04 — OPTIMIZE FOR ATS & APPLICATIONS
+
+Prompts 16–20
+
+This section focuses on matching the application to what employers are actually asking for.
+
+Includes:
+
+16 — Extract the Important Keywords
+
+Identify important:
+
+Skills
+Qualifications
+Tools
+Responsibilities
+Industry terminology
+
+17 — Find the Matches in Your Resume
+
+Compare job requirements against actual evidence in the resume.
+
+18 — Improve ATS Alignment
+
+Improve terminology and alignment without keyword stuffing or falsely claiming skills.
+
+19 — Find Why Your Application Could Be Rejected
+
+Think like a hiring manager and identify realistic reasons the application might be overlooked.
+
+20 — Final Application Check
+
+A final quality-control pass before submitting.
+
+The outcome:
+
+"My application is relevant, targeted and ready to submit."
+
+05 — BUILD YOUR LINKEDIN PRESENCE
+
+Prompts 21–25
+
+Your resume isn't the only thing recruiters see.
+
+Includes:
+
+21 — Write Your LinkedIn Headline
+
+Create targeted headline options communicating what the candidate does, their expertise and the role they're targeting.
+
+22 — Write Your LinkedIn About Section
+
+Create a conversational professional story around experience, expertise, accomplishments and career goals.
+
+23 — Improve Your LinkedIn Experience
+
+Make LinkedIn experience more engaging and impact-focused.
+
+24 — Find Your LinkedIn Keywords
+
+Identify relevant terminology and where it should naturally appear throughout the profile.
+
+25 — Audit Your LinkedIn Profile
+
+Review:
+
+Headline
+About
+Experience
+Skills
+Career positioning
+Relevance
+Overall clarity
+
+and identify the highest-priority improvements.
+
+The outcome:
+
+"My LinkedIn profile tells the same professional story as my application."
+
+06 — APPLICATIONS & COVER LETTERS
+
+Prompts 26–30
+
+Now the reader actually starts applying.
+
+Includes:
+
+26 — Tailor Your Application
+
+Identify the most relevant experience and skills to emphasize.
+
+27 — Write a Cover Letter
+
+Create a concise, role-specific cover letter.
+
+28 — Answer Application Questions
+
+Generate concise answers that directly respond to employer questions.
+
+29 — Explain Why You Want the Job
+
+Create short, application-length and interview-length versions.
+
+30 — Review Your Application Before Submitting
+
+Check for:
+
+Relevance
+Consistency
+Clarity
+Grammar
+Evidence
+Generic content
+Unsupported claims
+Missing information
+The outcome:
+
+"I'm not sending the same application everywhere."
+
+07 — NETWORKING & RECRUITER OUTREACH
+
+Prompts 31–35
+
+This section moves beyond job boards.
+
+Includes:
+
+31 — Find the Right People to Contact
+
+Identify recruiters, hiring managers, team members, industry professionals and alumni worth contacting.
+
+32 — Write a Connection Request
+
+Create short, natural LinkedIn connection requests.
+
+33 — Message a Recruiter
+
+Write a concise recruiter message explaining relevance and interest.
+
+34 — Ask for an Informational Chat
+
+Approach professionals for conversations without directly asking them for a job.
+
+35 — Follow Up Without Being Annoying
+
+Create polite follow-up messages in different tones.
+
+The outcome:
+
+"I'm building relationships instead of just clicking Apply."
+
+08 — PREPARE FOR THE INTERVIEW
+
+Prompts 36–40
+
+The Blueprint then moves into interview preparation.
+
+Includes:
+
+36 — Predict the Interview Questions
+
+Generate likely questions based on the role and resume.
+
+37 — Build Strong Answers
+
+Structure answers around:
+
+Situation → Action → Result
+
+38 — Explain Your Career Change
+
+Create an honest explanation of why you're moving between roles or industries.
+
+39 — Handle Your Weaknesses
+
+Prepare answers around skill gaps, lack of experience or employment gaps.
+
+40 — Run a Mock Interview
+
+AI acts as the hiring manager, asks questions one at a time, evaluates responses and gives improvement suggestions.
+
+The outcome:
+
+"I don't walk into the interview wondering what they'll ask."
+
+09 — SALARY, NEGOTIATION & THE OFFER
+
+Prompts 41–45
+
+The book doesn't stop once someone gets an offer.
+
+Includes:
+
+41 — Research Your Salary Range
+
+Estimate a reasonable salary range based on role, location, industry and experience.
+
+42 — Answer "What Are Your Salary Expectations?"
+
+Prepare different ways of answering the question.
+
+43 — Evaluate a Job Offer
+
+Look beyond salary:
+
+Base salary
+Bonus
+Benefits
+Working arrangement
+Hours
+Growth
+Responsibilities
+Stability
+Other terms
+
+44 — Negotiate Your Offer
+
+Identify potential areas for negotiation.
+
+45 — Decide Whether to Accept
+
+Score the offer according to the candidate's own priorities and understand the trade-offs rather than blindly accepting or rejecting.
+
+The outcome:
+
+"Getting the offer isn't the end — I know how to evaluate it."
+
+10 — FOLLOW-UP & BUILDING MOMENTUM
+
+Prompts 46–50
+
+The final section turns the prompts into an ongoing system.
+
+Includes:
+
+46 — Follow Up After an Interview
+
+Create professional email and LinkedIn follow-ups.
+
+47 — Follow Up on an Application
+
+Politely ask about application status.
+
+48 — Learn From a Rejection
+
+Analyze what can realistically be learned from rejection without pretending to know why the candidate was rejected.
+
+49 — Build Your Job Search Plan
+
+Create a realistic weekly plan covering applications, networking, recruiters, interviews, follow-ups and tracking.
+
+50 — Build Your Personal Job Search System
+
+Combine the entire Blueprint into a repeatable job-search workflow.
+
+The outcome:
+
+"I now have a repeatable system instead of randomly applying."
+
+🎁 BONUS 01 — THE 50-PROMPT ROADMAP
+
+A quick roadmap showing the progression of the 50 prompts.
+
+The idea is essentially:
+
+Know yourself → Find your target → Build your resume → Optimize → Build your presence → Apply → Network → Interview → Evaluate offers → Build your system.
+
+The roadmap specifically covers identifying job titles, researching career paths, evaluating job descriptions, assessing company culture, finding skill gaps, considering industry trends, using job boards/networks, informational interviews, career assessments and setting realistic career goals.
+
+🎁 BONUS 02 — THE 7-DAY AI JOB SEARCH CHALLENGE
+
+A seven-day implementation plan.
+
+DAY 01 — KNOW YOUR VALUE
+
+Complete Prompts 01–05
+
+Define:
+
+Skills
+Strengths
+Professional positioning
+DAY 02 — FIND YOUR TARGET
+
+Complete Prompts 06–10
+
+Choose realistic roles and identify gaps.
+
+DAY 03 — BUILD YOUR RESUME
+
+Complete Prompts 11–20
+
+Build and optimize the resume.
+
+DAY 04 — BUILD YOUR PRESENCE
+
+Complete Prompts 21–25
+
+Improve LinkedIn.
+
+DAY 05 — START APPLYING
+
+Complete Prompts 26–30
+
+Create targeted applications for 2–3 relevant jobs.
+
+DAY 06 — START NETWORKING
+
+Complete Prompts 31–35
+
+Find relevant people and start genuine conversations.
+
+DAY 07 — BUILD MOMENTUM
+
+Complete Prompts 36–50
+
+Prepare for interviews, understand offers and build the ongoing job-search system.
+
+The product's main promise
+
+I would position the product around this:
+
+Stop guessing your way through the job search.
+
+The Blueprint gives someone a structured way to use AI at every major stage of finding and landing a job.
+
+The transformation
+
+Before
+
+"I don't know what jobs I should apply for."
+
+↓
+
+After
+
+"I know which roles fit me."
+
+Before
+
+"My resume just lists what I did."
+
+↓
+
+After
+
+"My resume shows the value I created."
+
+Before
+
+"I don't know what to say to recruiters."
+
+↓
+
+After
+
+"I have personalized outreach ready."
+
+Before
+
+"I have no idea what they'll ask in the interview."
+
+↓
+
+After
+
+"I've already practiced the likely questions."
+
+Before
+
+"I got an offer. Should I take it?"
+
+↓
+
+After
+
+"I can evaluate the entire offer against my priorities."
+
+Who it's for
+Primary audience
+
+Non-technical professionals looking for a better job.
+
+Especially people who:
+
+Are actively job hunting
+Want to change careers
+Don't know what roles fit their experience
+Have a weak or generic resume
+Struggle with LinkedIn
+Don't know how to approach recruiters
+Want help preparing for interviews
+Are overwhelmed by the job-search process
+Want to use AI but don't know how to prompt it effectively
+
+The book itself explicitly frames its prompts around non-technical professionals.
+
+What makes it different
+
+Don't sell it as simply:
+
+"50 ChatGPT prompts."
+
+That's too weak.
+
+Sell it as:
+
+A complete AI-powered job-search workflow.
+
+The prompts are connected.
+
+They aren't just 50 random prompts sitting in a PDF.
+
+The intended progression is:
+
+Self-discovery
+→ Career targeting
+→ Resume
+→ ATS
+→ LinkedIn
+→ Applications
+→ Networking
+→ Interview
+→ Offer
+→ Follow-up
+→ Repeatable system
+
+That's the strongest selling point.
+
+Product facts
+Product name
+
+The AI Job Search Blueprint
+
+Format
+
+Digital PDF / downloadable digital product
+
+Core content
+
+50 AI prompts
+
+Sections
+
+10
+
+Bonuses
+
+2
+
+Bonus 1
+
+50-Prompt Roadmap
+
+Bonus 2
+
+7-Day AI Job Search Challenge
+
+Positioning
+
+AI-powered career/job-search toolkit
+
+Target audience
+
+Non-technical professionals / job seekers / career changers
+
+Price we're currently using
+
+₹499

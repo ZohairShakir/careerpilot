@@ -1,0 +1,2 @@
+import LegalPage from "../legal-page";
+export default function Page() { return <LegalPage title="Digital delivery policy"><p>Career Pilot products are digital downloads; no physical product is shipped.</p><p>After Razorpay confirms a captured payment, secure download links for the AI Job Search Blueprint, AI-Ready Resume Template, and Job Search Checklist are displayed immediately. Download links are time-limited to protect the files.</p><p>If payment was captured but the files were not delivered, email arkzlab@gmail.com with your payment ID.</p></LegalPage>; }
