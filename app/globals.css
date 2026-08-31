@@ -142,6 +142,15 @@ h1 em,h2 em { font-weight:400; }
 .dashboard-header { display:flex; justify-content:space-between; align-items:center; padding-bottom:36px; border-bottom:1px solid var(--line); }
 .dashboard-header h1 { font-size:52px; }
 .dashboard-header a { color:var(--muted); font-size:14px; }
+.dashboard-filters { display:grid; grid-template-columns:auto 1fr; align-items:flex-end; gap:18px 28px; margin-top:34px; padding:20px 0; border-bottom:1px solid var(--line); }
+.quick-filters { display:flex; gap:8px; }
+.quick-filters a,.custom-filter button { display:grid; place-items:center; min-height:38px; padding:0 15px; border:1px solid var(--line); background:white; color:var(--muted); font-size:12px; font-weight:600; cursor:pointer; }
+.quick-filters a.active,.quick-filters a:hover,.custom-filter button:hover { border-color:var(--green); background:var(--green); color:white; }
+.custom-filter { display:flex; align-items:flex-end; justify-content:flex-end; gap:10px; }
+.custom-filter label { color:var(--muted); font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.05em; }
+.custom-filter input { display:block; min-height:38px; margin-top:5px; padding:0 10px; border:1px solid var(--line); background:white; color:var(--ink); font:500 12px/1 'DM Sans',sans-serif; }
+.dashboard-filters>p { grid-column:1/-1; margin:0; color:var(--muted); font-size:12px; }
+.dashboard-filters>p strong { color:var(--green); }
 .metrics { display:grid; grid-template-columns:repeat(5,1fr); margin:50px 0 75px; border-block:1px solid var(--line); }
 .metric { padding:28px 22px; border-right:1px solid var(--line); }
 .metric:last-child { border-right:0; }
@@ -154,6 +163,7 @@ h1 em,h2 em { font-weight:400; }
 .data-table th { color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.07em; }
 .empty-row { color:var(--muted); padding:24px 12px!important; }
 @media (max-width:800px) { .metrics { grid-template-columns:1fr 1fr; } .metric { border-bottom:1px solid var(--line); } .dashboard-table-wrap { overflow-x:auto; } }
+@media (max-width:800px) { .dashboard-filters { grid-template-columns:1fr; align-items:flex-start; } .custom-filter { justify-content:flex-start; flex-wrap:wrap; } .dashboard-filters>p { grid-column:1; } }
 @media (max-width:560px) {
   .shell { width:calc(100% - 32px); }
   .wordmark { font-size:26px; }

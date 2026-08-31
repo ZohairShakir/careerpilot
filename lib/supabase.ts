@@ -28,6 +28,22 @@ export async function supabaseRequest<T = unknown>(
   return text ? JSON.parse(text) as T : null;
 }
 
+export async function supabaseCount(path: string): Promise<number> {
+  if (!baseUrl || !serviceKey) return 0;
+  const response = await fetch(`${baseUrl}/rest/v1/${path}`, {
+    method: "HEAD",
+    headers: {
+      apikey: serviceKey,
+      Authorization: `Bearer ${serviceKey}`,
+      Prefer: "count=exact",
+    },
+    cache: "no-store",
+  });
+  if (!response.ok) throw new Error(`Supabase count failed (${response.status})`);
+  const count = response.headers.get("content-range")?.split("/")[1];
+  return count && count !== "*" ? Number(count) : 0;
+}
+
 export async function bestEffort(task: () => Promise<unknown>) {
   try { await task(); } catch (error) {
     console.error("Analytics persistence failed", error instanceof Error ? error.message : error);
