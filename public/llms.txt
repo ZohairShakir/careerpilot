@@ -1,0 +1,23 @@
+# Career Pilot
+
+Career Pilot is a practical, evidence-led AI job-search system for non-technical professionals, active job seekers, and career changers.
+
+## Primary pages
+
+- [Career Pilot AI Job Search Bundle](https://careerpilot.store/): Product overview for the 67-page Blueprint, 50 guided prompts, résumé template, and job-search checklist.
+- [About Career Pilot](https://careerpilot.store/about): The principles and purpose behind the system.
+- [Free AI Job Search Prompts](https://careerpilot.store/free-ai-job-search-prompts): Ten free prompts covering career direction, résumé improvement, applications, interviews, and planning.
+- [AI Job Search Guides](https://careerpilot.store/blog): The Career Pilot educational resource hub.
+
+## Guides
+
+- [How to Use AI in Your Job Search](https://careerpilot.store/blog/how-to-use-ai-for-job-search)
+- [AI Résumé Prompts](https://careerpilot.store/blog/ai-resume-prompts)
+- [How to Tailor Your Résumé to a Job Description](https://careerpilot.store/blog/tailor-resume-to-job-description)
+- [A Practical 7-Day AI Job Search Plan](https://careerpilot.store/blog/7-day-job-search-plan)
+
+## Core editorial principle
+
+AI should help people uncover, structure, and communicate their real experience. It should never invent qualifications, achievements, responsibilities, experience, or metrics.
+
+Contact: arkzlab@gmail.com

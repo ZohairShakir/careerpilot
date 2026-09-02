@@ -110,7 +110,7 @@ export default function Home() {
         <div className="shell truth-grid"><p className="quote">“Use AI to communicate your real value—not invent qualifications, achievements, or experience.”</p><p>Career Pilot is built around truthful, evidence-led applications. AI helps you discover, structure, and communicate what is already yours.</p></div>
       </section>
 
-      <section className="purchase">
+      <section className="purchase" id="buy">
         <div className="shell purchase-grid">
           <div><h2>Everything you need<br />to move <em>forward.</em></h2><ul><li>67-page AI Job Search Blueprint</li><li>AI-Ready Resume Template</li><li>Job Search Checklist</li><li>Instant digital access</li></ul><div className="price">₹499</div><PurchaseButton light /><span className="payment-note">Secure payment via Razorpay</span></div>
           <Image src="/assets/book-cover.jpeg" alt="The AI Job Search Blueprint" width={1054} height={1492} />
@@ -119,7 +119,7 @@ export default function Home() {
 
       <section className="faq shell" id="faq"><h2>Questions,<br /><em>answered.</em></h2><div>{faqs.map(([q, a]) => <details key={q}><summary>{q}<span>+</span></summary><p>{a}</p></details>)}</div></section>
 
-      <footer className="footer shell"><a className="wordmark" href="#top"><Mark />career pilot</a><div><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="/refund-policy">Refund policy</a><a href="/digital-delivery">Digital delivery</a><a href="/contact">Contact</a></div></footer>
+      <footer className="footer shell"><a className="wordmark" href="#top"><Mark />career pilot</a><div><a href="/blog">Guides</a><a href="/free-ai-job-search-prompts">Free prompts</a><a href="/about">About</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="/refund-policy">Refund policy</a><a href="/digital-delivery">Digital delivery</a><a href="/contact">Contact</a></div></footer>
     </main>
   );
 }
