@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import AnalyticsProvider from "./analytics-provider";
 import GoogleAnalytics from "./google-analytics";
+import MicrosoftClarity from "./microsoft-clarity";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://careerpilot.store"),
@@ -14,6 +15,7 @@ export const metadata: Metadata = {
   authors: [{ name: "Career Pilot", url: "https://careerpilot.store" }],
   creator: "Career Pilot",
   publisher: "Career Pilot",
+  referrer: "origin-when-cross-origin",
   alternates: { canonical: "/" },
   category: "Career development",
   keywords: ["AI job search", "AI resume template", "job search checklist", "AI prompts for job seekers", "career planning"],
@@ -40,5 +42,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en"><body>{children}<AnalyticsProvider /><GoogleAnalytics /></body></html>;
+  return <html lang="en"><body>{children}<AnalyticsProvider /><GoogleAnalytics /><MicrosoftClarity /></body></html>;
 }

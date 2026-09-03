@@ -7,6 +7,8 @@ export const metadata: Metadata = {
   title: "About Career Pilot",
   description: "Career Pilot is a practical, evidence-led AI job-search system for non-technical professionals, active job seekers, and career changers.",
   alternates: { canonical: "/about" },
+  openGraph: { title: "About Career Pilot", description: "A practical, evidence-led AI job-search system built around truthful applications.", url: "/about", images: ["/assets/career-pilot-bundle-white.png"] },
+  twitter: { card: "summary_large_image", title: "About Career Pilot", description: "A practical, evidence-led AI job-search system built around truthful applications.", images: ["/assets/career-pilot-bundle-white.png"] },
 };
 
 export default function AboutPage() {

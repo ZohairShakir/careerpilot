@@ -23,7 +23,7 @@ export function ResourceFooter() {
     <footer className="footer shell">
       <Brand />
       <div>
-        <Link href="/blog">Guides</Link><Link href="/about">About</Link>
+        <Link href="/blog">Guides</Link><Link href="/free-ai-job-search-prompts">Free prompts</Link><Link href="/about">About</Link>
         <Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/contact">Contact</Link>
       </div>
     </footer>

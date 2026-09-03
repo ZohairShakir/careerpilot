@@ -6,6 +6,8 @@ export const metadata: Metadata = {
   title: "10 Free AI Job Search Prompts",
   description: "Ten practical AI prompts for discovering your strengths, targeting suitable roles, improving your résumé, networking, and preparing for interviews.",
   alternates: { canonical: "/free-ai-job-search-prompts" },
+  openGraph: { title: "10 Free AI Job Search Prompts", description: "Copy ten practical prompts for a clearer, more truthful job search.", url: "/free-ai-job-search-prompts", images: ["/assets/career-pilot-bundle-white.png"] },
+  twitter: { card: "summary_large_image", title: "10 Free AI Job Search Prompts", description: "Copy ten practical prompts for a clearer, more truthful job search.", images: ["/assets/career-pilot-bundle-white.png"] },
 };
 
 const prompts = [

@@ -56,6 +56,8 @@ export function track(event: FunnelEvent, metadata: Record<string, string | numb
   else void fetch("/api/analytics/event", { method: "POST", headers: { "Content-Type": "application/json" }, body: payload, keepalive: true });
 
   window.gtag?.("event", event === "payment_captured" ? "purchase" : event === "checkout_details_submitted" ? "begin_checkout" : event, {
+    page_location: location.href,
+    page_path: location.pathname,
     currency: "INR",
     value: event === "payment_captured" || event === "checkout_details_submitted" ? 499 : undefined,
     transaction_id: metadata.paymentId,

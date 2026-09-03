@@ -7,6 +7,8 @@ export const metadata: Metadata = {
   title: "AI Job Search Guides",
   description: "Practical guides for using AI to target roles, improve your résumé, build stronger applications, and run a consistent job search.",
   alternates: { canonical: "/blog" },
+  openGraph: { title: "AI Job Search Guides", description: "Practical, truthful guidance for building a stronger AI-assisted job search.", url: "/blog", images: ["/assets/career-pilot-bundle-white.png"] },
+  twitter: { card: "summary_large_image", title: "AI Job Search Guides", description: "Practical, truthful guidance for building a stronger AI-assisted job search.", images: ["/assets/career-pilot-bundle-white.png"] },
 };
 
 export default function BlogPage() {

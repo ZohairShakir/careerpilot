@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import PurchaseButton from "./purchase-button";
 
 const stages = [
@@ -24,6 +25,14 @@ const structuredData = {
       name: "Career Pilot",
       url: "https://careerpilot.store",
       email: "arkzlab@gmail.com",
+      contactPoint: { "@type": "ContactPoint", contactType: "customer support", email: "arkzlab@gmail.com" },
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://careerpilot.store/#website",
+      name: "Career Pilot",
+      url: "https://careerpilot.store",
+      publisher: { "@id": "https://careerpilot.store/#organization" },
     },
     {
       "@type": "Product",
@@ -32,6 +41,7 @@ const structuredData = {
       description: "A 67-page AI Job Search Blueprint with 50 guided prompts, an AI-ready resume template, and a practical job search checklist.",
       image: "https://careerpilot.store/assets/career-pilot-bundle-white.png",
       brand: { "@type": "Brand", name: "Career Pilot" },
+      seller: { "@id": "https://careerpilot.store/#organization" },
       category: "Digital career development resources",
       offers: {
         "@type": "Offer",
@@ -64,7 +74,7 @@ export default function Home() {
       <header className="nav shell">
         <a className="wordmark" href="#top"><Mark />career pilot</a>
         <nav aria-label="Primary navigation">
-          <a href="#bundle">Inside the bundle</a><a href="#system">The system</a><a href="#faq">FAQ</a>
+          <a href="#bundle">Inside the bundle</a><Link href="/free-ai-job-search-prompts">Free prompts</Link><Link href="/blog">Guides</Link><a href="#faq">FAQ</a>
         </nav>
         <PurchaseButton compact />
       </header>
@@ -108,6 +118,14 @@ export default function Home() {
 
       <section className="truth">
         <div className="shell truth-grid"><p className="quote">“Use AI to communicate your real value—not invent qualifications, achievements, or experience.”</p><p>Career Pilot is built around truthful, evidence-led applications. AI helps you discover, structure, and communicate what is already yours.</p></div>
+      </section>
+
+      <section className="resources shell" aria-labelledby="resources-title">
+        <div className="resources-heading"><h2 id="resources-title">Start useful.<br /><em>Start free.</em></h2><p>Clear, practical guidance built from the same evidence-led system as the complete Blueprint.</p></div>
+        <div className="resource-links">
+          <Link href="/free-ai-job-search-prompts"><span>Free resource</span><h3>10 AI prompts for a clearer job search</h3><p>Use AI to identify strengths, assess roles, improve your résumé, prepare for interviews, and plan your week.</p><b>Open the prompts →</b></Link>
+          <Link href="/blog"><span>Career Pilot guides</span><h3>Build a stronger job-search system</h3><p>Step-by-step guidance on targeting roles, tailoring applications, using AI truthfully, and staying consistent.</p><b>Explore all guides →</b></Link>
+        </div>
       </section>
 
       <section className="purchase" id="buy">
