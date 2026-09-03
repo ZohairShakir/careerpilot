@@ -48,8 +48,14 @@ const structuredData = {
         url: "https://careerpilot.store",
         priceCurrency: "INR",
         price: "499",
-        availability: "https://schema.org/InStock",
+        availability: "https://schema.org/OnlineOnly",
         itemCondition: "https://schema.org/NewCondition",
+        hasMerchantReturnPolicy: {
+          "@type": "MerchantReturnPolicy",
+          applicableCountry: "IN",
+          returnPolicyCategory: "https://schema.org/MerchantReturnNotPermitted",
+          merchantReturnLink: "https://careerpilot.store/refund-policy",
+        },
       },
     },
     {
