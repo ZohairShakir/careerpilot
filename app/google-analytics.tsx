@@ -1,8 +1,12 @@
+"use client";
+
 import Script from "next/script";
+import { usePathname } from "next/navigation";
 
 export default function GoogleAnalytics() {
   const id = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
-  if (!id) return null;
+  const pathname = usePathname();
+  if (!id || pathname.startsWith("/admin")) return null;
   return <>
     <Script id="ga4" strategy="beforeInteractive">{`
       window.dataLayer = window.dataLayer || [];

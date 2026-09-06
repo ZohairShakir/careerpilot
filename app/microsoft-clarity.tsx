@@ -1,8 +1,12 @@
+"use client";
+
 import Script from "next/script";
+import { usePathname } from "next/navigation";
 
 export default function MicrosoftClarity() {
   const projectId = process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID;
-  if (!projectId) return null;
+  const pathname = usePathname();
+  if (!projectId || pathname.startsWith("/admin")) return null;
 
   return (
     <Script id="microsoft-clarity" strategy="afterInteractive">{`
