@@ -9,7 +9,13 @@ export type FunnelEvent =
   | "checkout_dismissed"
   | "payment_failed"
   | "payment_captured"
-  | "bundle_downloaded";
+  | "bundle_downloaded"
+  | "job_fit_viewed"
+  | "job_fit_started"
+  | "resume_uploaded"
+  | "job_fit_completed"
+  | "job_fit_failed"
+  | "job_fit_bundle_cta_clicked";
 
 declare global {
   interface Window {

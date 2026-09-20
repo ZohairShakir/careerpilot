@@ -15,6 +15,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/about`, changeFrequency: "yearly", priority: 0.7 },
     { url: `${baseUrl}/blog`, changeFrequency: "weekly", priority: 0.8 },
     { url: `${baseUrl}/free-ai-job-search-prompts`, changeFrequency: "monthly", priority: 0.9 },
+    { url: `${baseUrl}/job-fit-check`, changeFrequency: "monthly", priority: 0.95 },
     ...articleSlugs.map((slug) => ({ url: `${baseUrl}/blog/${slug}`, changeFrequency: "monthly" as const, priority: 0.75 })),
     { url: `${baseUrl}/contact`, changeFrequency: "yearly", priority: 0.4 },
     { url: `${baseUrl}/privacy`, changeFrequency: "yearly", priority: 0.2 },

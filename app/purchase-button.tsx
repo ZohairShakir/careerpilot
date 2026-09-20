@@ -8,7 +8,7 @@ import { analyticsContext, track } from "./analytics";
 type RazorpayInstance = { open(): void; on(name: string, callback: (response: { error?: { description?: string; metadata?: { order_id?: string; payment_id?: string } } }) => void): void };
 declare global { interface Window { Razorpay?: new (options: Record<string, unknown>) => RazorpayInstance } }
 
-type Props = { compact?: boolean; light?: boolean };
+type Props = { compact?: boolean; light?: boolean; label?: string };
 type Downloads = { label: string; url: string }[];
 
 let checkoutScriptPromise: Promise<void> | null = null;
@@ -26,7 +26,7 @@ function loadCheckout() {
   return checkoutScriptPromise;
 }
 
-export default function PurchaseButton({ compact, light }: Props) {
+export default function PurchaseButton({ compact, light, label }: Props) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -95,15 +95,15 @@ export default function PurchaseButton({ compact, light }: Props) {
   }
 
   return <>
-    <button className={`buy-button ${compact ? "compact" : ""} ${light ? "light" : ""}`} onClick={openModal}>{compact ? "Get the bundle" : "Get the complete bundle — ₹499"}</button>
+    <button className={`buy-button ${compact ? "compact" : ""} ${light ? "light" : ""}`} onClick={openModal}>{label || (compact ? "Get the bundle" : "Get the complete bundle — ₹499")}</button>
     {open ? createPortal(<div className="modal-backdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && closeModal()}><section className="checkout-modal" role="dialog" aria-modal="true" aria-labelledby="checkout-title"><button className="close" aria-label="Close checkout" onClick={closeModal}>×</button>
       {bundleUrl ? <div className="success">
-        <div className="success-visual"><Image src="/assets/career-pilot-bundle-white.png" alt="Career Pilot bundle with the AI Job Search Blueprint, resume template and checklist" width={560} height={420} priority /></div>
+        <div className="success-visual"><Image src="/assets/career-pilot-bundle-white.png" alt="Career Pilot AI Job Search Bundle" width={560} height={420} priority /></div>
         <div className="success-heading"><span className="success-mark" aria-hidden="true">✓</span><span>Payment successful</span></div>
         <h2 id="checkout-title">Your bundle is ready.</h2>
         <p>Everything you need to plan, apply, and move forward with more clarity.</p>
         <a className="bundle-download" href={bundleUrl} onClick={() => track("bundle_downloaded", { file: "complete_bundle" })}><span>Download complete bundle</span><span aria-hidden="true">↓</span></a>
-        <small>3 resources · ZIP file · Secure download</small>
+        <small>6 connected resources · ZIP file · Secure download</small>
         <details className="individual-downloads" onToggle={(event) => event.currentTarget.open && track("bundle_downloaded", { file: "individual_downloads_opened" })}>
           <summary>Prefer individual files?<span aria-hidden="true">+</span></summary>
           <div>{downloads.map(item => <a key={item.url} href={item.url} onClick={() => track("bundle_downloaded", { file: item.label })}>{item.label}<span aria-hidden="true">↓</span></a>)}</div>

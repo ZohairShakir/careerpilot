@@ -21,7 +21,7 @@ export async function POST(request: Request) {
       ]);
     });
     const expiresAt = Date.now() + 15 * 60 * 1000;
-    const labels = { blueprint: "AI Job Search Blueprint", resume: "AI-Ready Resume Template", checklist: "Job Search Checklist" };
+    const labels = { blueprint: "AI Job Search Blueprint", quickStart: "Quick Start Guide", implementationPlan: "30-Day Implementation Plan", resume: "AI-Ready Resume Template", checklist: "AI Job Search Checklist", tracker: "Job Application Tracker" };
     const productIds = Object.keys(labels) as Array<keyof typeof labels>;
     const downloads = productIds.map(key => ({ label: labels[key], url: `/api/download?token=${encodeURIComponent(createDownloadToken(paymentId, key, expiresAt))}` }));
     const bundleUrl = `/api/download?token=${encodeURIComponent(createDownloadToken(paymentId, "bundle", expiresAt))}`;

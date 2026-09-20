@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     default: "AI Job Search Blueprint, Resume Template & Checklist | Career Pilot",
     template: "%s | Career Pilot",
   },
-  description: "A practical AI job search bundle with a 67-page blueprint, 50 guided AI prompts, an AI-ready resume template, and a job search checklist.",
+  description: "A practical six-resource AI job-search system with a 67-page Blueprint, Quick Start guide, 30-day plan, editable resume template, checklist, and tracker.",
   applicationName: "Career Pilot",
   authors: [{ name: "Career Pilot", url: "https://careerpilot.store" }],
   creator: "Career Pilot",
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   referrer: "origin-when-cross-origin",
   alternates: { canonical: "/" },
   category: "Career development",
-  keywords: ["AI job search", "AI resume template", "job search checklist", "AI prompts for job seekers", "career planning"],
+  keywords: ["AI job search", "job fit checker", "resume job description match", "AI resume template", "job search checklist", "AI prompts for job seekers", "career planning"],
   robots: {
     index: true,
     follow: true,

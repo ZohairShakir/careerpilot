@@ -13,7 +13,7 @@ The payment flow creates a Razorpay order on the server, verifies the checkout s
 
 ## Analytics and attribution
 
-1. Create a Supabase project and run `supabase/migrations/001_analytics.sql` in its SQL editor.
+1. Create a Supabase project and run the files in `supabase/migrations/` in numerical order in its SQL editor.
 2. Add `SUPABASE_URL` and the server-only `SUPABASE_SERVICE_ROLE_KEY` to Vercel.
 3. Create a GA4 web property and add its measurement ID as `NEXT_PUBLIC_GA_MEASUREMENT_ID`.
 4. Optional: create a Microsoft Clarity project and add its project ID as `NEXT_PUBLIC_CLARITY_PROJECT_ID`. The script stays disabled when this variable is absent.
@@ -22,3 +22,9 @@ The payment flow creates a Razorpay order on the server, verifies the checkout s
 The first-party event stream records anonymous sessions, UTM attribution, checkout progression, payment status, and downloads. Supabase views `funnel_summary` and `abandoned_checkouts` provide the initial reporting layer.
 
 Set `ANALYTICS_DASHBOARD_USER` and `ANALYTICS_DASHBOARD_PASSWORD` to protect the reporting page at `/admin/analytics` with HTTP Basic authentication.
+
+## Job Fit Check
+
+The free tool at `/job-fit-check` accepts pasted résumé text or a PDF, DOCX, or TXT upload and compares it with a pasted job description. Submitted document contents and generated reports are not persisted by Career Pilot.
+
+Add `GEMINI_API_KEY` to Vercel. `GEMINI_MODEL` defaults to the stable `gemini-2.5-flash` model, and `JOB_FIT_FINGERPRINT_SECRET` should be a long random value used to create privacy-safe rate-limit fingerprints. Run `supabase/migrations/002_job_fit.sql` before enabling the tool in production.
