@@ -88,7 +88,10 @@ export default function Home() {
       <section className="hero shell" id="top">
         <div className="hero-copy reveal">
           <h1>Your entire<br />job search.<br /><em>Finally, in one system.</em></h1>
-          <p>Six connected resources that take you from choosing the right role to sending targeted applications and building a routine you can repeat.</p>
+          <p>Six practical resources to help you find the right roles, tailor your applications, use AI effectively, and build a repeatable job-search routine.</p>
+          <div className="hero-proof" aria-label="What the Career Pilot system includes">
+            <span>50 guided prompts</span><span>AI-ready resume template</span><span>Job Fit Check</span><span>30-day plan</span>
+          </div>
           <PurchaseButton />
           <span className="secure">Instant digital access · Secure checkout</span>
         </div>
@@ -132,7 +135,7 @@ export default function Home() {
       <section className="resources shell" aria-labelledby="resources-title">
         <div className="resources-heading"><h2 id="resources-title">Start useful.<br /><em>Start free.</em></h2><p>Clear, practical guidance built from the same evidence-led system as the complete Blueprint.</p></div>
         <div className="resource-links">
-          <Link href="/job-fit-check"><span>Free AI tool</span><h3>Know the fit before you apply</h3><p>Compare your résumé with a real job description and see demonstrated matches, unclear evidence, important gaps, and what to improve.</p><b>Check your job fit →</b></Link>
+          <Link href="/job-fit-check"><span>Free AI tool</span><h3>Free resume and job description match checker</h3><p>Compare your résumé with a real job description and see demonstrated requirements, unclear evidence, important gaps, and what to improve.</p><b>Check your resume match →</b></Link>
           <Link href="/free-ai-job-search-prompts"><span>Free resource</span><h3>10 AI prompts for a clearer job search</h3><p>Use AI to identify strengths, assess roles, improve your résumé, prepare for interviews, and plan your week.</p><b>Open the prompts →</b></Link>
           <Link href="/blog"><span>Career Pilot guides</span><h3>Build a stronger job-search system</h3><p>Step-by-step guidance on targeting roles, tailoring applications, using AI truthfully, and staying consistent.</p><b>Explore all guides →</b></Link>
         </div>

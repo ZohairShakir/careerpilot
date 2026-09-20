@@ -26,11 +26,12 @@ function Results({ result }: { result: JobFitResult }) {
     possible_alignment: `Good potential fit, with ${gapCount || "a few"} ${gapCount === 1 ? "area" : "areas"} to address before applying.`,
     significant_gaps: `${gapCount || "Several"} important ${gapCount === 1 ? "gap needs" : "gaps need"} attention before applying.`,
   }[result.readiness];
-  const biggestGaps = [
-    ...result.missing.map(item => ({ ...item, type: "missing" as const })),
-    ...result.unclear.map(item => ({ ...item, type: "unclear" as const })),
-  ].slice(0, 2);
   const topImprovements = result.improvements.slice(0, 3);
+  const evidenceGroups = [
+    { key: "demonstrated", title: "Demonstrated", items: result.demonstrated.slice(0, 3), empty: "No requirements were clearly demonstrated from the supplied résumé." },
+    { key: "unclear", title: "Unclear", items: result.unclear.slice(0, 3), empty: "No unclear requirements were identified." },
+    { key: "missing", title: "Not demonstrated", items: result.missing.slice(0, 3), empty: "No important requirements were absent from the supplied résumé." },
+  ] as const;
 
   return <section className="fit-results" aria-live="polite">
     <div className="fit-result-summary">
@@ -44,19 +45,21 @@ function Results({ result }: { result: JobFitResult }) {
       </div>
     </div>
 
+    <section className="fit-evidence-snapshot">
+      <div className="fit-section-heading"><h3>Your evidence at a glance</h3><p>The most important requirements from this role, compared with what your résumé actually shows.</p></div>
+      <div>{evidenceGroups.map(group => <section key={group.key}><h4><StatusIcon type={group.key} />{group.title}</h4>{group.items.length ? <ul>{group.items.map(item => <li key={`${group.key}-${item.requirement}`}><strong>{item.requirement}</strong><p>{item.explanation}</p></li>)}</ul> : <p className="fit-empty-evidence">{group.empty}</p>}</section>)}</div>
+    </section>
+
     <div className="fit-quick-grid">
-      <section className="fit-biggest-gaps">
-        <h3>What needs attention</h3>
-        {biggestGaps.length ? <ol>{biggestGaps.map((item, index) => <li key={`${item.type}-${item.requirement}`}><span>{String(index + 1).padStart(2, "0")}</span><div><h4>{item.requirement}</h4><p>{item.explanation}</p></div></li>)}</ol> : <p className="fit-no-gaps">No major gaps were identified from the information provided.</p>}
-      </section>
       <section className="fit-quick-fixes">
         <h3>Fix before you apply</h3>
+        <p>Focus on these changes first. Only add skills or experience you can genuinely support.</p>
         <ol>{topImprovements.map((item, index) => <li key={`${item.priority}-${item.title}`}><span>{index + 1}</span><div><h4>{item.title}</h4><p>{item.suggestion}</p></div></li>)}</ol>
       </section>
     </div>
 
     <aside className="fit-compact-cta">
-      <div><h3>Ready to build the rest of your application?</h3><p>Six practical resources. One focused job-search system.</p></div>
+      <div><h3>Fix these gaps before you apply with the Career Pilot System.</h3><p>Use the AI-Ready Resume Template to make your real evidence easier to find, then follow Quick Start to tailor this application without inventing experience.</p></div>
       <div onClick={() => track("job_fit_bundle_cta_clicked")}><PurchaseButton label="Get the complete Career Pilot system → ₹499" /></div>
     </aside>
 
@@ -110,5 +113,5 @@ export default function JobFitCheck() {
     } finally { setLoading(false); }
   }
 
-  return <div className="fit-tool shell"><header className="fit-hero"><div><h1>Know the fit before<br /><em>you apply.</em></h1><p>Compare your résumé with a job description and get a clear breakdown of what you demonstrate, what is unclear, what is not demonstrated, and what to improve.</p></div><ul><li>More informed applications</li><li>Stronger, more relevant résumés</li><li>A clearer path forward</li></ul></header><form className="fit-form" onSubmit={submit}><section><div className="fit-field-head"><h2>1. Your résumé</h2>{mode === "upload" ? <span>PDF, DOCX or TXT · 5 MB max</span> : <span>{resumeText.length.toLocaleString()} / {MAX_CHARS.toLocaleString()}</span>}</div><div className="fit-modes" role="tablist" aria-label="Résumé input method"><button type="button" role="tab" aria-selected={mode === "paste"} onClick={() => { setMode("paste"); setFile(null); }}>Paste text</button><button type="button" role="tab" aria-selected={mode === "upload"} onClick={() => { setMode("upload"); setResumeText(""); }}>Upload file</button></div>{mode === "paste" ? <textarea aria-label="Résumé text" value={resumeText} onChange={event => { setResumeText(event.target.value.slice(0, MAX_CHARS)); setError(""); }} placeholder="Paste your résumé text here…" /> : <label className={`fit-upload ${file ? "has-file" : ""}`}><input type="file" accept=".pdf,.docx,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain" onChange={event => chooseFile(event.target.files?.[0] || null)} /><strong>{file ? file.name : "Choose your résumé file"}</strong><span>{file ? `${Math.round(file.size / 1024)} KB · Click to replace` : "PDF, DOCX or TXT · maximum 5 MB"}</span></label>}</section><section><div className="fit-field-head"><h2>2. Job description</h2><span className={jobDescription.length > 0 && jobDescription.trim().length < MIN_JOB_CHARS ? "needs-detail" : ""}>{jobDescription.trim().length < MIN_JOB_CHARS ? `${jobDescription.length.toLocaleString()} / ${MIN_JOB_CHARS} minimum` : `${jobDescription.length.toLocaleString()} / ${MAX_CHARS.toLocaleString()}`}</span></div><textarea aria-label="Job description" aria-describedby="job-description-help" value={jobDescription} onChange={event => { setJobDescription(event.target.value.slice(0, MAX_CHARS)); setError(""); }} placeholder="Paste the job listing or add a short role summary…" /><p className="fit-field-help" id="job-description-help">A couple of sentences about the responsibilities or required skills is enough.</p></section><div className="fit-submit"><button className="buy-button" disabled={loading}><span>{loading ? "Analyzing the evidence…" : "Check my job fit"}</span><span className="fit-submit-arrow" aria-hidden="true">→</span></button><p>Your documents are processed to create this analysis and are not stored. Remove sensitive personal information before uploading.</p>{error ? <p className="form-error" role="alert">{error}</p> : null}</div></form><div ref={resultsRef}>{result ? <Results result={result} /> : null}</div></div>;
+  return <div className="fit-tool shell"><header className="fit-hero"><div><h1>Free Job Fit Checker</h1><p>Compare your resume with a specific job description for free. See how your experience matches the job requirements, where the evidence is unclear, what is not demonstrated, and what to improve before applying.</p></div><ul><li>Evidence behind every resume match</li><li>Specific job requirements compared</li><li>No arbitrary ATS percentage</li></ul></header><form className="fit-form" onSubmit={submit}><section><div className="fit-field-head"><h2>1. Your résumé</h2>{mode === "upload" ? <span>PDF, DOCX or TXT · 5 MB max</span> : <span>{resumeText.length.toLocaleString()} / {MAX_CHARS.toLocaleString()}</span>}</div><div className="fit-modes" role="tablist" aria-label="Résumé input method"><button type="button" role="tab" aria-selected={mode === "paste"} onClick={() => { setMode("paste"); setFile(null); }}>Paste text</button><button type="button" role="tab" aria-selected={mode === "upload"} onClick={() => { setMode("upload"); setResumeText(""); }}>Upload file</button></div>{mode === "paste" ? <textarea aria-label="Résumé text" value={resumeText} onChange={event => { setResumeText(event.target.value.slice(0, MAX_CHARS)); setError(""); }} placeholder="Paste your résumé text here…" /> : <label className={`fit-upload ${file ? "has-file" : ""}`}><input type="file" accept=".pdf,.docx,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain" onChange={event => chooseFile(event.target.files?.[0] || null)} /><strong>{file ? file.name : "Choose your résumé file"}</strong><span>{file ? `${Math.round(file.size / 1024)} KB · Click to replace` : "PDF, DOCX or TXT · maximum 5 MB"}</span></label>}</section><section><div className="fit-field-head"><h2>2. Job description</h2><span className={jobDescription.length > 0 && jobDescription.trim().length < MIN_JOB_CHARS ? "needs-detail" : ""}>{jobDescription.trim().length < MIN_JOB_CHARS ? `${jobDescription.length.toLocaleString()} / ${MIN_JOB_CHARS} minimum` : `${jobDescription.length.toLocaleString()} / ${MAX_CHARS.toLocaleString()}`}</span></div><textarea aria-label="Job description" aria-describedby="job-description-help" value={jobDescription} onChange={event => { setJobDescription(event.target.value.slice(0, MAX_CHARS)); setError(""); }} placeholder="Paste the job listing or add a short role summary…" /><p className="fit-field-help" id="job-description-help">A couple of sentences about the responsibilities or required skills is enough.</p></section><div className="fit-submit"><button className="buy-button" disabled={loading}><span>{loading ? "Analyzing the evidence…" : "Check my job fit"}</span><span className="fit-submit-arrow" aria-hidden="true">→</span></button><p>Your documents are processed to create this analysis and are not stored. Remove sensitive personal information before uploading.</p>{error ? <p className="form-error" role="alert">{error}</p> : null}</div></form><div ref={resultsRef}>{result ? <Results result={result} /> : null}</div></div>;
 }

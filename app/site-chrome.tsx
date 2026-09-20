@@ -9,7 +9,7 @@ export function ResourceHeader() {
     <header className="nav shell resource-nav">
       <Brand />
       <nav aria-label="Primary navigation">
-        <Link href="/job-fit-check">Job Fit Check</Link>
+        <Link href="/job-fit-check">Resume Match Checker</Link>
         <Link href="/blog">Guides</Link>
         <Link href="/free-ai-job-search-prompts">Free prompts</Link>
         <Link href="/about">About</Link>
@@ -24,7 +24,7 @@ export function ResourceFooter() {
     <footer className="footer shell">
       <Brand />
       <div>
-        <Link href="/job-fit-check">Job Fit Check</Link><Link href="/blog">Guides</Link><Link href="/free-ai-job-search-prompts">Free prompts</Link><Link href="/about">About</Link>
+        <Link href="/job-fit-check">Free Job Fit Checker</Link><Link href="/blog">Guides</Link><Link href="/free-ai-job-search-prompts">Free prompts</Link><Link href="/about">About</Link>
         <Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/contact">Contact</Link>
       </div>
     </footer>
