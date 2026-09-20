@@ -107,7 +107,7 @@ export default function Home() {
           <article><span>05</span><div><h3>AI Job Search Checklist</h3><p>Before, during, and after every application</p></div></article>
           <article><span>06</span><div><h3>Job Application Tracker</h3><p>Log applications and never miss a follow-up</p></div></article>
         </div>
-        <div className="cover-stage"><div className="bundle-stack" aria-label="Six Career Pilot resources"><Image src="/assets/book-cover.jpeg" alt="The AI Job Search Blueprint cover" width={1054} height={1492} /><div className="bundle-tabs" aria-hidden="true"><span>02 <b>Quick Start</b></span><span>03 <b>30-Day Plan</b></span><span>04 <b>Résumé Template</b></span><span>05 <b>Checklist</b></span><span>06 <b>Application Tracker</b></span></div></div><ol className="bundle-flow"><li>Learn</li><li>Start</li><li>Execute</li><li>Build</li><li>Check</li><li>Track</li></ol></div>
+        <div className="cover-stage"><Image className="bundle-visual" src="/assets/career-pilot-six-resource-bundle.png" alt="The Career Pilot Blueprint, résumé template, Quick Start guide, 30-day plan, checklist, and application tracker" width={1536} height={1024} /></div>
       </section>
 
       <section className="system" id="system">
