@@ -6,6 +6,7 @@ export const dynamic = "force-dynamic";
 type Checkout = { email: string; status: string; razorpay_order_id: string; utm_source: string | null; utm_campaign: string | null; created_at: string };
 type Purchase = { email: string | null; razorpay_payment_id: string; amount: number; download_count: number; purchased_at: string };
 type JobFitRun = { id: string; resume_method: string; status: string; alignment: string | null; duration_ms: number | null; created_at: string };
+type JobFitLead = { analysis_id: string; name: string; email: string; input_mode: string; role_title: string | null; analysis_status: string; alignment: string | null; marketing_consent: boolean; created_at: string };
 type Query = { range?: string | string[]; from?: string | string[]; to?: string | string[] };
 type Bounds = { key: "today" | "yesterday" | "custom" | "all"; start?: string; end?: string; label: string; from: string; to: string };
 
@@ -50,8 +51,9 @@ export default async function AnalyticsDashboard({ searchParams }: { searchParam
   const checkoutFilter = filter("created_at", period);
   const purchaseFilter = filter("purchased_at", period);
   const visitorFilter = filter("first_seen_at", period);
+  const leadFilter = filter("created_at", period);
 
-  const [visitors, ctaClicks, checkoutStarts, purchaseCount, abandoned, purchases, fitStarts, fitCompleted, fitFailed, fitBundleClicks, recentFitRuns] = await Promise.all([
+  const [visitors, ctaClicks, checkoutStarts, purchaseCount, abandoned, purchases, fitStarts, fitCompleted, fitFailed, fitBundleClicks, recentFitRuns, leadCount, marketingOptIns, recentLeads] = await Promise.all([
     supabaseCount(`visitor_sessions?select=session_id${visitorFilter}`),
     supabaseCount(`analytics_events?select=id&event_name=eq.bundle_cta_clicked${eventFilter}`),
     supabaseCount(`analytics_events?select=id&event_name=eq.checkout_details_submitted${eventFilter}`),
@@ -63,6 +65,9 @@ export default async function AnalyticsDashboard({ searchParams }: { searchParam
     supabaseCount(`job_fit_runs?select=id&status=eq.failed${eventFilter}`),
     supabaseCount(`analytics_events?select=id&event_name=eq.job_fit_bundle_cta_clicked${eventFilter}`),
     supabaseRequest<JobFitRun[]>(`job_fit_runs?select=id,resume_method,status,alignment,duration_ms,created_at${eventFilter}&order=created_at.desc&limit=25`),
+    supabaseCount(`job_fit_leads?select=id${leadFilter}`),
+    supabaseCount(`job_fit_leads?select=id&marketing_consent=eq.true${leadFilter}`),
+    supabaseRequest<JobFitLead[]>(`job_fit_leads?select=analysis_id,name,email,input_mode,role_title,analysis_status,alignment,marketing_consent,created_at${leadFilter}&order=created_at.desc&limit=50`),
   ]);
   const conversion = visitors ? Math.round((purchaseCount / visitors) * 10000) / 100 : 0;
   const fitCompletion = fitStarts ? Math.round((fitCompleted / fitStarts) * 10000) / 100 : 0;
@@ -87,5 +92,6 @@ export default async function AnalyticsDashboard({ searchParams }: { searchParam
     <section className="dashboard-section"><h2>Job Fit Check</h2><div className="metrics tool-metrics">{[["Analyses started", fitStarts], ["Completed", fitCompleted], ["Failed", fitFailed], ["Completion", `${fitCompletion}%`], ["Bundle clicks", fitBundleClicks]].map(([label, value]) => <div className="metric" key={label}><span>{label}</span><strong>{value}</strong></div>)}</div><div className="dashboard-table-wrap"><table className="data-table"><thead><tr><th>Input</th><th>Status</th><th>Alignment</th><th>Duration</th><th>Started</th></tr></thead><tbody>{recentFitRuns?.length ? recentFitRuns.map(item => <tr key={item.id}><td>{item.resume_method.toUpperCase()}</td><td>{item.status}</td><td>{item.alignment?.replaceAll("_", " ") || "—"}</td><td>{item.duration_ms ? `${(item.duration_ms / 1000).toFixed(1)}s` : "—"}</td><td>{date(item.created_at)}</td></tr>) : <tr><td className="empty-row" colSpan={5}>No Job Fit Check runs for this period.</td></tr>}</tbody></table></div></section>
     <section className="dashboard-section"><h2>Abandoned checkouts</h2><div className="dashboard-table-wrap"><table className="data-table"><thead><tr><th>Email</th><th>Status</th><th>Source</th><th>Campaign</th><th>Started</th><th>Order</th></tr></thead><tbody>{abandoned?.length ? abandoned.map(item => <tr key={item.razorpay_order_id}><td>{item.email}</td><td>{item.status}</td><td>{item.utm_source || "Direct"}</td><td>{item.utm_campaign || "—"}</td><td>{date(item.created_at)}</td><td>{item.razorpay_order_id}</td></tr>) : <tr><td className="empty-row" colSpan={6}>No abandoned checkouts for this period.</td></tr>}</tbody></table></div></section>
     <section className="dashboard-section"><h2>Purchases</h2><div className="dashboard-table-wrap"><table className="data-table"><thead><tr><th>Email</th><th>Amount</th><th>Downloads</th><th>Purchased</th><th>Payment</th></tr></thead><tbody>{purchases?.length ? purchases.map(item => <tr key={item.razorpay_payment_id}><td>{item.email || "—"}</td><td>₹{(item.amount / 100).toFixed(0)}</td><td>{item.download_count}</td><td>{date(item.purchased_at)}</td><td>{item.razorpay_payment_id}</td></tr>) : <tr><td className="empty-row" colSpan={5}>No purchases for this period.</td></tr>}</tbody></table></div></section>
+    <section className="dashboard-section"><h2>Job Fit leads</h2><div className="metrics tool-metrics">{[["Leads captured", leadCount], ["Marketing opt-ins", marketingOptIns]].map(([label, value]) => <div className="metric" key={label}><span>{label}</span><strong>{value}</strong></div>)}</div><div className="dashboard-table-wrap"><table className="data-table"><thead><tr><th>Name</th><th>Email</th><th>Target</th><th>Status</th><th>Alignment</th><th>Marketing</th><th>Captured</th></tr></thead><tbody>{recentLeads?.length ? recentLeads.map(item => <tr key={item.analysis_id}><td>{item.name}</td><td><a href={`mailto:${item.email}`}>{item.email}</a></td><td>{item.role_title || item.input_mode.replaceAll("_", " ")}</td><td>{item.analysis_status}</td><td>{item.alignment?.replaceAll("_", " ") || "—"}</td><td>{item.marketing_consent ? "Opted in" : "No consent"}</td><td>{date(item.created_at)}</td></tr>) : <tr><td className="empty-row" colSpan={7}>No Job Fit leads for this period.</td></tr>}</tbody></table></div></section>
   </main>;
 }

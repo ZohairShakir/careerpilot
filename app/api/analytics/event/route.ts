@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { bestEffort, supabaseRequest } from "../../../../lib/supabase";
 
-const EVENTS = new Set(["page_view", "bundle_cta_clicked", "checkout_opened", "checkout_details_submitted", "razorpay_opened", "checkout_dismissed", "payment_failed", "payment_captured", "bundle_downloaded", "job_fit_viewed", "job_fit_started", "resume_uploaded", "job_fit_completed", "job_fit_failed", "job_fit_bundle_cta_clicked", "role_title_analysis_used", "job_description_analysis_used", "result_viewed", "paid_offer_viewed", "discount_clicked", "checkout_clicked"]);
+const EVENTS = new Set(["page_view", "bundle_cta_clicked", "checkout_opened", "checkout_details_submitted", "razorpay_opened", "checkout_dismissed", "payment_failed", "payment_captured", "bundle_downloaded", "job_fit_viewed", "job_fit_started", "resume_uploaded", "job_fit_completed", "job_fit_failed", "job_fit_bundle_cta_clicked", "role_title_analysis_used", "job_description_analysis_used", "result_viewed", "paid_offer_viewed", "discount_clicked", "checkout_clicked", "lead_modal_viewed", "job_fit_lead_submitted", "marketing_consent_given", "lead_modal_abandoned", "result_revealed", "offer_viewed_after_lead", "offer_clicked_after_lead", "lead_to_purchase"]);
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 export async function POST(request: Request) {

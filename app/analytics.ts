@@ -21,7 +21,15 @@ export type FunnelEvent =
   | "result_viewed"
   | "paid_offer_viewed"
   | "discount_clicked"
-  | "checkout_clicked";
+  | "checkout_clicked"
+  | "lead_modal_viewed"
+  | "job_fit_lead_submitted"
+  | "marketing_consent_given"
+  | "lead_modal_abandoned"
+  | "result_revealed"
+  | "offer_viewed_after_lead"
+  | "offer_clicked_after_lead"
+  | "lead_to_purchase";
 
 declare global {
   interface Window {
