@@ -15,7 +15,13 @@ export type FunnelEvent =
   | "resume_uploaded"
   | "job_fit_completed"
   | "job_fit_failed"
-  | "job_fit_bundle_cta_clicked";
+  | "job_fit_bundle_cta_clicked"
+  | "role_title_analysis_used"
+  | "job_description_analysis_used"
+  | "result_viewed"
+  | "paid_offer_viewed"
+  | "discount_clicked"
+  | "checkout_clicked";
 
 declare global {
   interface Window {
@@ -65,9 +71,9 @@ export function track(event: FunnelEvent, metadata: Record<string, string | numb
     page_location: location.href,
     page_path: location.pathname,
     currency: "INR",
-    value: event === "payment_captured" || event === "checkout_details_submitted" ? 499 : undefined,
+    value: metadata.value ?? (event === "payment_captured" || event === "checkout_details_submitted" ? 499 : undefined),
     transaction_id: metadata.paymentId,
-    items: [{ item_id: "career-pilot-bundle", item_name: "Career Pilot AI Job Search Bundle", price: 499, quantity: 1 }],
+    items: [{ item_id: "career-pilot-bundle", item_name: "Career Pilot AI Job Search Bundle", price: metadata.value ?? 499, quantity: 1 }],
     ...metadata,
   });
 }

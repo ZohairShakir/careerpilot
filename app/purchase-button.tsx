@@ -8,7 +8,7 @@ import { analyticsContext, track } from "./analytics";
 type RazorpayInstance = { open(): void; on(name: string, callback: (response: { error?: { description?: string; metadata?: { order_id?: string; payment_id?: string } } }) => void): void };
 declare global { interface Window { Razorpay?: new (options: Record<string, unknown>) => RazorpayInstance } }
 
-type Props = { compact?: boolean; light?: boolean; label?: string };
+type Props = { compact?: boolean; light?: boolean; label?: string; offerToken?: string | null; offerPrice?: number; source?: "job_fit_offer" };
 type Downloads = { label: string; url: string }[];
 
 let checkoutScriptPromise: Promise<void> | null = null;
@@ -26,7 +26,7 @@ function loadCheckout() {
   return checkoutScriptPromise;
 }
 
-export default function PurchaseButton({ compact, light, label }: Props) {
+export default function PurchaseButton({ compact, light, label, offerToken, offerPrice, source }: Props) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -42,7 +42,9 @@ export default function PurchaseButton({ compact, light, label }: Props) {
   }, [open]);
 
   function openModal() {
-    track("bundle_cta_clicked", { placement: compact ? "header" : light ? "purchase_section" : "hero" });
+    const placement = source || (compact ? "header" : light ? "purchase_section" : "hero");
+    track("bundle_cta_clicked", { placement });
+    if (source === "job_fit_offer") { track("discount_clicked", { offer: "JOBFIT20", value: offerPrice || 399 }); track("checkout_clicked", { placement }); }
     track("checkout_opened");
     setOpen(true);
   }
@@ -60,13 +62,14 @@ export default function PurchaseButton({ compact, light, label }: Props) {
     const email = String(data.get("email") || "");
     const context = analyticsContext();
     try {
-      track("checkout_details_submitted");
+      track("checkout_details_submitted", { value: offerPrice || 499, placement: source || "standard" });
       const response = await fetch("/api/razorpay/order", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, ...context }),
+        body: JSON.stringify({ name, email, offerToken, ...context }),
       });
       const order = await response.json();
       if (!response.ok) throw new Error(order.error || "Checkout is unavailable");
+      if (offerPrice && order.amount !== offerPrice * 100) throw new Error("This offer could not be verified. Run a new Job Fit Check and try again.");
       await loadCheckout();
       const checkout = new window.Razorpay!({
         key: order.keyId, amount: order.amount, currency: order.currency, name: "Career Pilot",
@@ -80,7 +83,7 @@ export default function PurchaseButton({ compact, light, label }: Props) {
           });
           const result = await verified.json();
           if (!verified.ok) { setError(result.error || "Payment confirmation is pending. Contact support with your payment ID."); setLoading(false); return; }
-          track("payment_captured", { paymentId: payment.razorpay_payment_id, orderId: payment.razorpay_order_id, value: 499 });
+          track("payment_captured", { paymentId: payment.razorpay_payment_id, orderId: payment.razorpay_order_id, value: order.amount / 100 });
           setDownloads(result.downloads); setBundleUrl(result.bundleUrl); setLoading(false);
         },
         modal: { ondismiss: () => { track("checkout_dismissed", { orderId: order.orderId }); setLoading(false); } },
@@ -109,7 +112,7 @@ export default function PurchaseButton({ compact, light, label }: Props) {
           <div>{downloads.map(item => <a key={item.url} href={item.url} onClick={() => track("bundle_downloaded", { file: item.label })}>{item.label}<span aria-hidden="true">↓</span></a>)}</div>
         </details>
         <p className="expiry-note">Download links expire in 15 minutes.</p>
-      </div> : <><h2 id="checkout-title">Start moving with clarity.</h2><p className="modal-intro">Enter your details to continue to secure Razorpay checkout.</p><div className="modal-order"><span>Career Pilot AI Job Search Bundle</span><b>₹499</b></div><form onSubmit={submit}><label>Full name<input name="name" autoComplete="name" required minLength={2} /></label><label>Email address<input name="email" type="email" autoComplete="email" required /></label><button className="buy-button" disabled={loading}>{loading ? "Please wait…" : "Continue to secure payment"}</button>{error ? <p className="form-error">{error}</p> : null}<small>By continuing, you agree to our terms and digital delivery policy.</small></form></>}
+      </div> : <><h2 id="checkout-title">Start moving with clarity.</h2><p className="modal-intro">Enter your details to continue to secure Razorpay checkout.</p><div className="modal-order"><span>Career Pilot AI Job Search Bundle</span><b>{offerPrice ? `₹${offerPrice}` : "₹499"}</b></div>{offerPrice ? <p className="modal-offer-note">Job Fit Check offer · 20% off the regular ₹499 price</p> : null}<form onSubmit={submit}><label>Full name<input name="name" autoComplete="name" required minLength={2} /></label><label>Email address<input name="email" type="email" autoComplete="email" required /></label><button className="buy-button" disabled={loading}>{loading ? "Please wait…" : "Continue to secure payment"}</button>{error ? <p className="form-error">{error}</p> : null}<small>By continuing, you agree to our terms and digital delivery policy.</small></form></>}
     </section></div>, document.body) : null}
   </>;
 }

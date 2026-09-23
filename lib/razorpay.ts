@@ -1,6 +1,9 @@
 import crypto from "node:crypto";
+import { hasValidJobFitOffer } from "./job-fit-offer";
 
 const API = "https://api.razorpay.com/v1";
+export const STANDARD_PRICE = 49900;
+export const JOB_FIT_PRICE = 39900;
 
 function credentials() {
   const keyId = process.env.RAZORPAY_KEY_ID;
@@ -14,20 +17,23 @@ function authHeader() {
   return `Basic ${Buffer.from(`${keyId}:${keySecret}`).toString("base64")}`;
 }
 
-export async function createOrder(name: string, email: string) {
+export async function createOrder(name: string, email: string, offerToken?: unknown) {
+  const jobFitOffer = hasValidJobFitOffer(offerToken);
+  const amount = jobFitOffer ? JOB_FIT_PRICE : STANDARD_PRICE;
   const response = await fetch(`${API}/orders`, {
     method: "POST",
     headers: { Authorization: authHeader(), "Content-Type": "application/json" },
     body: JSON.stringify({
-      amount: 49900,
+      amount,
       currency: "INR",
       receipt: `cp_${crypto.randomUUID().replaceAll("-", "").slice(0, 24)}`,
-      notes: { name: name.slice(0, 120), email: email.slice(0, 160), product: "career-pilot-bundle" },
+      notes: { name: name.slice(0, 120), email: email.slice(0, 160), product: "career-pilot-bundle", offer: jobFitOffer ? "JOBFIT20" : "standard" },
     }),
     cache: "no-store",
   });
   if (!response.ok) throw new Error("Could not create Razorpay order");
-  return response.json() as Promise<{ id: string; amount: number; currency: string }>;
+  const order = await response.json() as { id: string; amount: number; currency: string };
+  return { ...order, offer: jobFitOffer ? "JOBFIT20" : null };
 }
 
 export function verifyPaymentSignature(orderId: string, paymentId: string, signature: string) {
@@ -38,14 +44,15 @@ export function verifyPaymentSignature(orderId: string, paymentId: string, signa
   return a.length === b.length && crypto.timingSafeEqual(a, b);
 }
 
-export async function paymentIsCaptured(paymentId: string) {
+export async function capturedPayment(paymentId: string) {
   const response = await fetch(`${API}/payments/${encodeURIComponent(paymentId)}`, {
     headers: { Authorization: authHeader() },
     cache: "no-store",
   });
-  if (!response.ok) return false;
+  if (!response.ok) return null;
   const payment = (await response.json()) as { status?: string; amount?: number; currency?: string };
-  return payment.status === "captured" && payment.amount === 49900 && payment.currency === "INR";
+  if (payment.status !== "captured" || payment.currency !== "INR" || ![STANDARD_PRICE, JOB_FIT_PRICE].includes(payment.amount || 0)) return null;
+  return { amount: payment.amount!, currency: payment.currency };
 }
 
 export function verifyWebhook(rawBody: string, signature: string) {
