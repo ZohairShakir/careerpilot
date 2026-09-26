@@ -88,6 +88,15 @@ h1 em,h2 em { font-weight:400; }
 .checkout-modal label { display:block; margin:18px 0; color:var(--ink); font-size:13px; font-weight:600; }
 .checkout-modal input { display:block; width:100%; border:1px solid var(--line); background:white; padding:14px; margin-top:8px; border-radius:0; outline:none; }
 .checkout-modal input:focus { border-color:var(--green); box-shadow:0 0 0 2px rgba(54,88,70,.1); }
+.promo-code { margin:18px 0; }
+.checkout-modal .promo-code>label { margin:0 0 8px; }
+.promo-code>div { display:grid; grid-template-columns:1fr auto; }
+.checkout-modal .promo-code input { min-width:0; margin:0; text-transform:uppercase; }
+.promo-code button { min-width:88px; border:1px solid var(--green); background:var(--green); color:white; font:600 12px/1 'DM Sans',sans-serif; cursor:pointer; }
+.promo-code button:hover { background:var(--deep); }
+.promo-code .promo-success,.promo-code .promo-error { margin:8px 0 0; font-size:12px; }
+.promo-code .promo-success { color:var(--green); }
+.promo-code .promo-error { color:#9d3026; }
 .checkout-modal form .buy-button { width:100%; margin-top:6px; }
 .checkout-modal small { display:block; text-align:center; color:var(--muted); margin-top:15px; line-height:1.45; }
 .form-error { color:#9d3026; font-size:13px; line-height:1.5; }

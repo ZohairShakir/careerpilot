@@ -32,6 +32,8 @@ export default function PurchaseButton({ compact, light, label, offerToken, offe
   const [error, setError] = useState("");
   const [downloads, setDownloads] = useState<Downloads>([]);
   const [bundleUrl, setBundleUrl] = useState("");
+  const [promoCode, setPromoCode] = useState("");
+  const [promoStatus, setPromoStatus] = useState<"idle" | "applied" | "invalid">("idle");
 
   useEffect(() => {
     if (!open) return;
@@ -46,12 +48,19 @@ export default function PurchaseButton({ compact, light, label, offerToken, offe
     track("bundle_cta_clicked", { placement });
     if (source === "job_fit_offer") { track("discount_clicked", { offer: "JOBFIT20", value: offerPrice || 399 }); track("checkout_clicked", { placement }); track("offer_clicked_after_lead"); }
     track("checkout_opened");
+    setPromoCode(""); setPromoStatus("idle");
     setOpen(true);
   }
 
   function closeModal() {
     if (!bundleUrl) track("checkout_dismissed");
     setOpen(false);
+  }
+
+  function applyPromoCode() {
+    const applied = promoCode.trim().toUpperCase() === "FB299";
+    setPromoStatus(applied ? "applied" : "invalid");
+    if (applied) track("discount_clicked", { offer: "FB299", value: 299 });
   }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
@@ -61,15 +70,17 @@ export default function PurchaseButton({ compact, light, label, offerToken, offe
     const name = String(data.get("name") || "");
     const email = String(data.get("email") || "");
     const context = analyticsContext();
+    const appliedPromoCode = promoStatus === "applied" ? "FB299" : undefined;
+    const expectedPrice = appliedPromoCode ? 299 : offerPrice || 499;
     try {
-      track("checkout_details_submitted", { value: offerPrice || 499, placement: source || "standard" });
+      track("checkout_details_submitted", { value: expectedPrice, placement: source || "standard", ...(appliedPromoCode ? { promoCode: appliedPromoCode } : {}) });
       const response = await fetch("/api/razorpay/order", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, offerToken, ...context }),
+        body: JSON.stringify({ name, email, offerToken, promoCode: appliedPromoCode, ...context }),
       });
       const order = await response.json();
       if (!response.ok) throw new Error(order.error || "Checkout is unavailable");
-      if (offerPrice && order.amount !== offerPrice * 100) throw new Error("This offer could not be verified. Run a new Job Fit Check and try again.");
+      if (order.amount !== expectedPrice * 100) throw new Error("This price could not be verified. Please refresh and try again.");
       await loadCheckout();
       const checkout = new window.Razorpay!({
         key: order.keyId, amount: order.amount, currency: order.currency, name: "Career Pilot",
@@ -113,7 +124,7 @@ export default function PurchaseButton({ compact, light, label, offerToken, offe
           <div>{downloads.map(item => <a key={item.url} href={item.url} onClick={() => track("bundle_downloaded", { file: item.label })}>{item.label}<span aria-hidden="true">↓</span></a>)}</div>
         </details>
         <p className="expiry-note">Download links expire in 15 minutes.</p>
-      </div> : <><h2 id="checkout-title">Start moving with clarity.</h2><p className="modal-intro">Enter your details to continue to secure Razorpay checkout.</p><div className="modal-order"><span>Career Pilot AI Job Search Bundle</span><b>{offerPrice ? `₹${offerPrice}` : "₹499"}</b></div>{offerPrice ? <p className="modal-offer-note">Job Fit Check offer · 20% off the regular ₹499 price</p> : null}<form onSubmit={submit}><label>Full name<input name="name" autoComplete="name" required minLength={2} defaultValue={prefillName} /></label><label>Email address<input name="email" type="email" autoComplete="email" required defaultValue={prefillEmail} /></label><button className="buy-button" disabled={loading}>{loading ? "Please wait…" : "Continue to secure payment"}</button>{error ? <p className="form-error">{error}</p> : null}<small>By continuing, you agree to our terms and digital delivery policy.</small></form></>}
+      </div> : <><h2 id="checkout-title">Start moving with clarity.</h2><p className="modal-intro">Enter your details to continue to secure Razorpay checkout.</p><div className="modal-order"><span>Career Pilot AI Job Search Bundle</span><b>{promoStatus === "applied" ? "₹299" : offerPrice ? `₹${offerPrice}` : "₹499"}</b></div>{promoStatus === "applied" ? <p className="modal-offer-note">FB299 applied · You save ₹200</p> : offerPrice ? <p className="modal-offer-note">Job Fit Check offer · 20% off the regular ₹499 price</p> : null}<form onSubmit={submit}><label>Full name<input name="name" autoComplete="name" required minLength={2} defaultValue={prefillName} /></label><label>Email address<input name="email" type="email" autoComplete="email" required defaultValue={prefillEmail} /></label><div className="promo-code"><label htmlFor="promo-code">Promo code</label><div><input id="promo-code" name="promoCode" value={promoCode} onChange={event => { setPromoCode(event.target.value.toUpperCase()); setPromoStatus("idle"); }} placeholder="Enter code" autoComplete="off" /><button type="button" onClick={applyPromoCode}>Apply</button></div>{promoStatus === "applied" ? <p className="promo-success">Code applied. Your total is ₹299.</p> : promoStatus === "invalid" ? <p className="promo-error">This promo code isn’t valid.</p> : null}</div><button className="buy-button" disabled={loading}>{loading ? "Please wait…" : "Continue to secure payment"}</button>{error ? <p className="form-error">{error}</p> : null}<small>By continuing, you agree to our terms and digital delivery policy.</small></form></>}
     </section></div>, document.body) : null}
   </>;
 }
