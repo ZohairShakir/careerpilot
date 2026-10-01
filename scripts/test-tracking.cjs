@@ -1,0 +1,53 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const vm = require('node:vm');
+const ts = require('typescript');
+
+function load(file, context = {}, dependencies = {}) {
+  const exports = {};
+  const code = ts.transpileModule(fs.readFileSync(file, 'utf8'), {
+    compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX, esModuleInterop: true },
+  }).outputText;
+  vm.runInNewContext(code, { exports, require: name => dependencies[name] ?? require(name), ...context });
+  return exports;
+}
+
+const storage = new Map();
+const localStorage = { getItem: key => storage.get(key) ?? null, setItem: (key, value) => storage.set(key, value) };
+const location = { pathname: '/', search: '', href: 'https://careerpilot.store/' };
+const window = {};
+const context = { window, location, localStorage, crypto: require('node:crypto').webcrypto, URLSearchParams, document: { referrer: '', title: 'Bundle' }, navigator: { sendBeacon: () => true } };
+const { pixel } = load('app/meta-pixel.tsx', context, { 'next/navigation': {}, 'next/script': {} });
+const { track, analyticsContext } = load('app/analytics.ts', context, { './meta-pixel': { pixel } });
+track('page_view');
+track('bundle_cta_clicked', { value: 399 });
+track('razorpay_opened', { value: 299 });
+track('payment_captured', { value: 299, paymentId: 'pay_test' });
+assert.deepEqual(JSON.parse(JSON.stringify(window.fbq.queue.map(args => args[1]))), ['944358658740047', 'PageView', 'ViewContent', 'AddToCart', 'InitiateCheckout', 'Purchase']);
+assert.equal(window.fbq.queue[4][2].value, 299);
+assert.equal(window.fbq.queue[5][2].currency, 'INR');
+assert.equal(window.fbq.queue[5][3].eventID, 'pay_test');
+location.search = '?utm_source=instagram&utm_medium=paid&utm_campaign=dont_apply_test';
+assert.equal(analyticsContext().attribution.source, 'instagram');
+location.search = ''; location.pathname = '/thank-you';
+assert.equal(analyticsContext().attribution.campaign, 'dont_apply_test');
+location.pathname = '/admin/analytics';
+pixel('PageView');
+assert.equal(window.fbq.queue.length, 6);
+
+let purchases = 0;
+const Success = load('app/thank-you/purchase-success.tsx', { localStorage }, {
+  react: { useEffect: callback => callback() }, '../analytics': { track: () => purchases++ },
+}).default;
+const props = { paymentId: 'pay_refresh', orderId: 'order_test', value: 299, downloads: [{ url: '/download', label: 'Bundle' }] };
+Success(props); Success(props);
+assert.equal(purchases, 1, 'refresh must not duplicate Purchase');
+
+const receipts = load('lib/purchase-receipt.ts', { Buffer, process: { env: { DOWNLOAD_SIGNING_SECRET: 'test-only-secret' } } });
+const receipt = { paymentId: 'pay_test', orderId: 'order_test', amount: 29900, expiresAt: Date.now() + 60000 };
+const token = receipts.createPurchaseReceipt(receipt);
+assert.equal(receipts.readPurchaseReceipt(token).amount, 29900);
+assert.equal(receipts.readPurchaseReceipt(token + 'tampered'), null);
+assert.equal(receipts.readPurchaseReceipt(receipts.createPurchaseReceipt({ ...receipt, expiresAt: Date.now() - 1 })), null);
+assert.equal(receipts.readPurchaseReceipt(), null);
+console.log('Tracking checks passed: funnel events, offer values, UTM persistence, purchase deduplication, signed receipt validation.');

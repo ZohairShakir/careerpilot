@@ -3,6 +3,7 @@ import "./globals.css";
 import AnalyticsProvider from "./analytics-provider";
 import GoogleAnalytics from "./google-analytics";
 import MicrosoftClarity from "./microsoft-clarity";
+import MetaPixel from "./meta-pixel";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://careerpilot.store"),
@@ -42,5 +43,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en"><body>{children}<AnalyticsProvider /><GoogleAnalytics /><MicrosoftClarity /></body></html>;
+  return <html lang="en"><body>{children}<AnalyticsProvider /><GoogleAnalytics /><MicrosoftClarity /><MetaPixel /></body></html>;
 }

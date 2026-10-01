@@ -1,5 +1,7 @@
 "use client";
 
+import { pixel } from "./meta-pixel";
+
 export type FunnelEvent =
   | "page_view"
   | "bundle_cta_clicked"
@@ -51,8 +53,10 @@ function sessionId() {
 
 function attribution(): Attribution {
   const existing = localStorage.getItem(ATTRIBUTION_KEY);
-  if (existing) return JSON.parse(existing) as Attribution;
   const params = new URLSearchParams(location.search);
+  if (existing && !["utm_source", "utm_medium", "utm_campaign"].some(key => params.has(key))) {
+    try { return JSON.parse(existing) as Attribution; } catch { /* Replace invalid saved attribution. */ }
+  }
   const value = {
     source: params.get("utm_source") || "",
     medium: params.get("utm_medium") || "",
@@ -70,6 +74,13 @@ export function analyticsContext() {
 }
 
 export function track(event: FunnelEvent, metadata: Record<string, string | number | boolean> = {}) {
+  if (event === "page_view") {
+    pixel("PageView");
+    if (location.pathname === "/") pixel("ViewContent", 499);
+  }
+  if (event === "bundle_cta_clicked") pixel("AddToCart", Number(metadata.value ?? 499));
+  if (event === "razorpay_opened") pixel("InitiateCheckout", Number(metadata.value ?? 499));
+  if (event === "payment_captured") pixel("Purchase", Number(metadata.value), String(metadata.paymentId));
   const context = analyticsContext();
   const payload = JSON.stringify({ event, ...context, pagePath: location.pathname, metadata });
   if (navigator.sendBeacon) navigator.sendBeacon("/api/analytics/event", payload);

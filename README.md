@@ -28,3 +28,19 @@ Set `ANALYTICS_DASHBOARD_USER` and `ANALYTICS_DASHBOARD_PASSWORD` to protect the
 The free tool at `/job-fit-check` accepts pasted résumé text or a PDF, DOCX, or TXT upload and compares it with a pasted job description. Submitted document contents and generated reports are not persisted by Career Pilot.
 
 Add `GEMINI_API_KEY` to Vercel. `GEMINI_MODEL` defaults to the stable `gemini-2.5-flash` model, and `JOB_FIT_FINGERPRINT_SECRET` should be a long random value used to create privacy-safe rate-limit fingerprints. Run `supabase/migrations/002_job_fit.sql` before enabling the tool in production.
+
+## Paid-ad tracking
+
+Meta Pixel `944358658740047` loads on public pages after hydration. Events: `PageView` on navigation, `ViewContent` on the bundle landing page, `AddToCart` when a bundle button opens the order form, `InitiateCheckout` when secure Razorpay checkout opens, and `Purchase` on `/thank-you` after server verification of a captured payment. Checkout and purchase values reflect the actual offer or promo price. Purchase events use the payment ID as `eventID` and a browser storage guard prevents duplicates on refresh. Direct or expired visits to `/thank-you` do not fire Purchase or reveal downloads. The receipt is signed, expires after 15 minutes, and is stored in an HttpOnly cookie.
+
+Use these destination URLs in your ads (UTM tags must be set in the ad platform; the website cannot change published ad links):
+
+- Instagram: `https://careerpilot.store/?utm_source=instagram&utm_medium=paid&utm_campaign=dont_apply_test&utm_content=creative_01`
+- Facebook: `https://careerpilot.store/?utm_source=facebook&utm_medium=paid&utm_campaign=dont_apply_test&utm_content=creative_01`
+- Job Fit Check: `https://careerpilot.store/job-fit-check?utm_source=instagram&utm_medium=paid&utm_campaign=dont_apply_test&utm_content=job_fit_01`
+
+Give each campaign and creative its own campaign/content value. Attribution persists through internal navigation and checkout; a new tagged visit replaces prior saved attribution, including an earlier direct visit.
+
+Clarity is integrated but requires your project ID in `NEXT_PUBLIC_CLARITY_PROJECT_ID` and a rebuild/redeploy to activate. Find it in your Clarity project's Setup settings: https://learn.microsoft.com/en-us/clarity/setup-and-installation/clarity-setup . Keep sensitive inputs masked in Clarity; download links on the thank-you page are explicitly masked.
+
+Validation: use Meta Events Manager Test Events or Meta Pixel Helper, open a tagged ad URL, click a bundle button, and complete a Razorpay **test-mode** payment. Expect one event at each funnel stage, the correct INR total, a redirect to `/thank-you`, working signed downloads, and no additional Purchase on refresh. Check Clarity recordings after configuring its project ID. Never use live payment credentials for automated checkout tests.

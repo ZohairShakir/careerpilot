@@ -712,3 +712,7 @@ h1 em,h2 em { font-weight:400; }
   .fit-improvements aside h3 { font-size:36px; }
   .fit-explainer h2,.fit-faq h2 { font-size:46px; }
 }
+
+.thank-you-page { max-width: 720px; padding-top: 80px; padding-bottom: 80px; }
+.thank-you-page h1 { font-size: clamp(2rem, 5vw, 3rem); line-height: 1.15; margin-bottom: 24px; }
+.thank-you-page .text-link { display: inline-block; margin-top: 32px; }

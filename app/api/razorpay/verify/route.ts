@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
-import { createDownloadToken, products } from "../../../../lib/downloads";
+import { createDownloadToken } from "../../../../lib/downloads";
 import { capturedPayment, verifyPaymentSignature } from "../../../../lib/razorpay";
 import { bestEffort, supabaseRequest } from "../../../../lib/supabase";
+import { createPurchaseReceipt, RECEIPT_COOKIE } from "../../../../lib/purchase-receipt";
 
 export async function POST(request: Request) {
   try {
@@ -33,7 +34,12 @@ export async function POST(request: Request) {
     const productIds = Object.keys(labels) as Array<keyof typeof labels>;
     const downloads = productIds.map(key => ({ label: labels[key], url: `/api/download?token=${encodeURIComponent(createDownloadToken(paymentId, key, expiresAt))}` }));
     const bundleUrl = `/api/download?token=${encodeURIComponent(createDownloadToken(paymentId, "bundle", expiresAt))}`;
-    return NextResponse.json({ bundleUrl, downloads });
+    const response = NextResponse.json({ bundleUrl, downloads, thankYouUrl: "/thank-you" });
+    response.cookies.set(RECEIPT_COOKIE, createPurchaseReceipt({ paymentId, orderId, amount: payment.amount, expiresAt }), {
+      httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", path: "/thank-you", maxAge: 15 * 60,
+    });
+    response.headers.set("Cache-Control", "no-store");
+    return response;
   } catch (error) {
     console.error("Payment verification failed", error instanceof Error ? error.message : error);
     return NextResponse.json({ error: "We could not confirm the payment." }, { status: 500 });
