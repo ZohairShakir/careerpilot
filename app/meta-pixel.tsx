@@ -30,5 +30,5 @@ export function pixel(event: string, value?: number, eventId?: string) {
 export default function MetaPixel() {
   const pathname = usePathname();
   if (pathname.startsWith("/admin")) return null;
-  return <Script id="meta-pixel" src="https://connect.facebook.net/en_US/fbevents.js" strategy="afterInteractive" />;
+  return <Script id="meta-pixel" src="https://connect.facebook.net/en_US/fbevents.js" strategy="lazyOnload" />;
 }

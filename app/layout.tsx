@@ -43,5 +43,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en"><body>{children}<AnalyticsProvider /><GoogleAnalytics /><MicrosoftClarity /><MetaPixel /></body></html>;
+  return <html lang="en"><head><link rel="preload" href="/fonts/dm-sans-latin-9fea608a.woff2" as="font" type="font/woff2" crossOrigin="anonymous" /><link rel="preload" href="/fonts/instrument-serif-latin-5eb09b5a.woff2" as="font" type="font/woff2" crossOrigin="anonymous" /></head><body>{children}<AnalyticsProvider /><GoogleAnalytics /><MicrosoftClarity /><MetaPixel /></body></html>;
 }

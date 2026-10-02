@@ -15,6 +15,6 @@ export default function GoogleAnalytics() {
       gtag('js', new Date());
       gtag('config', '${id}', { anonymize_ip: true, send_page_view: false });
     `}</Script>
-    <Script src={`https://www.googletagmanager.com/gtag/js?id=${id}`} strategy="afterInteractive" />
+    <Script src={`https://www.googletagmanager.com/gtag/js?id=${id}`} strategy="lazyOnload" />
   </>;
 }
