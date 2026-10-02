@@ -18,6 +18,8 @@ export function pixel(event: string, value?: number, eventId?: string) {
     }, { queue: [] as unknown[][] });
     fbq.push = fbq; fbq.loaded = true; fbq.version = "2.0";
     window.fbq = fbq; window._fbq = fbq;
+    // Funnel events are explicit; avoid automatic DOM scanning and inferred events.
+    fbq("set", "autoConfig", false, META_PIXEL_ID);
     fbq("init", META_PIXEL_ID);
   }
   const data = value === undefined ? {} : {

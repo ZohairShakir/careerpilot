@@ -20,20 +20,21 @@ const context = { window, location, localStorage, crypto: require('node:crypto')
 const { pixel } = load('app/meta-pixel.tsx', context, { 'next/navigation': {}, 'next/script': {} });
 const { track, analyticsContext } = load('app/analytics.ts', context, { './meta-pixel': { pixel } });
 track('page_view');
+assert.equal(window.fbq.queue[0][2], false, 'manual mode must precede initialization');
 track('bundle_cta_clicked', { value: 399 });
 track('razorpay_opened', { value: 299 });
 track('payment_captured', { value: 299, paymentId: 'pay_test' });
-assert.deepEqual(JSON.parse(JSON.stringify(window.fbq.queue.map(args => args[1]))), ['944358658740047', 'PageView', 'ViewContent', 'AddToCart', 'InitiateCheckout', 'Purchase']);
-assert.equal(window.fbq.queue[4][2].value, 299);
-assert.equal(window.fbq.queue[5][2].currency, 'INR');
-assert.equal(window.fbq.queue[5][3].eventID, 'pay_test');
+assert.deepEqual(JSON.parse(JSON.stringify(window.fbq.queue.map(args => args[1]))), ['autoConfig', '944358658740047', 'PageView', 'ViewContent', 'AddToCart', 'InitiateCheckout', 'Purchase']);
+assert.equal(window.fbq.queue[5][2].value, 299);
+assert.equal(window.fbq.queue[6][2].currency, 'INR');
+assert.equal(window.fbq.queue[6][3].eventID, 'pay_test');
 location.search = '?utm_source=instagram&utm_medium=paid&utm_campaign=dont_apply_test';
 assert.equal(analyticsContext().attribution.source, 'instagram');
 location.search = ''; location.pathname = '/thank-you';
 assert.equal(analyticsContext().attribution.campaign, 'dont_apply_test');
 location.pathname = '/admin/analytics';
 pixel('PageView');
-assert.equal(window.fbq.queue.length, 6);
+assert.equal(window.fbq.queue.length, 7);
 
 let purchases = 0;
 const Success = load('app/thank-you/purchase-success.tsx', { localStorage }, {
