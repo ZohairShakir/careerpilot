@@ -31,7 +31,7 @@ Add `GEMINI_API_KEY` to Vercel. `GEMINI_MODEL` defaults to the stable `gemini-2.
 
 ## Paid-ad tracking
 
-Meta Pixel `944358658740047` loads on public pages after hydration. Events: `PageView` on navigation, `ViewContent` on the bundle landing page, `AddToCart` when a bundle button opens the order form, `InitiateCheckout` when secure Razorpay checkout opens, and `Purchase` on `/thank-you` after server verification of a captured payment. Checkout and purchase values reflect the actual offer or promo price. Purchase events use the payment ID as `eventID` and a browser storage guard prevents duplicates on refresh. Direct or expired visits to `/thank-you` do not fire Purchase or reveal downloads. The receipt is signed, expires after 15 minutes, and is stored in an HttpOnly cookie.
+Meta Pixel `944358658740047` loads on public pages after hydration. Events: `PageView` on navigation, `ViewContent` on the bundle landing page, `AddToCart` when a bundle button opens the order form, `InitiateCheckout` when secure Razorpay checkout opens, and `Purchase` on `/thank-you` after server verification of a captured payment. Checkout and purchase values reflect the server-confirmed offer price. Purchase events use the payment ID as `eventID` and a browser storage guard prevents duplicates on refresh. Direct or expired visits to `/thank-you` do not fire Purchase or reveal downloads. The receipt is signed, expires after 15 minutes, and is stored in an HttpOnly cookie.
 
 Use these destination URLs in your ads (UTM tags must be set in the ad platform; the website cannot change published ad links):
 
@@ -46,3 +46,7 @@ Clarity is integrated but requires your project ID in `NEXT_PUBLIC_CLARITY_PROJE
 Validation: use Meta Events Manager Test Events or Meta Pixel Helper, open a tagged ad URL, click a bundle button, and complete a Razorpay **test-mode** payment. Expect one event at each funnel stage, the correct INR total, a redirect to `/thank-you`, working signed downloads, and no additional Purchase on refresh. Check Clarity recordings after configuring its project ID. Never use live payment credentials for automated checkout tests.
 
 Performance: checkout form code loads on purchase-button hover/focus or click instead of initial page load. Images negotiate AVIF with a WebP fallback and retain a one-day optimization cache. Meta Pixel uses manual-only mode (`autoConfig: false` before initialization), disabling automatic page/form scanning and inferred events; the explicit PageView, ViewContent, AddToCart, InitiateCheckout, and verified Purchase events remain enabled. Automatic advanced matching is not used. GA4 and Clarity still load during browser idle time.
+
+## Launch offer
+
+See [launch offer setup and validation](docs/launch-offer.md) for migration requirements, test-only inventory resets, the kill switch, and verification limits.

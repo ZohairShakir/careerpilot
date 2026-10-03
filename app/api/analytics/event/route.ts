@@ -14,15 +14,15 @@ export async function POST(request: Request) {
     await bestEffort(async () => {
       await supabaseRequest("visitor_sessions?on_conflict=session_id", {
           method: "POST",
-          body: JSON.stringify({ session_id: body.sessionId, first_referrer: String(attribution.referrer || "").slice(0, 500), utm_source: String(attribution.source || "").slice(0, 120), utm_medium: String(attribution.medium || "").slice(0, 120), utm_campaign: String(attribution.campaign || "").slice(0, 160), last_seen_at: now }),
+          body: JSON.stringify({ session_id: body.sessionId, first_referrer: String(attribution.referrer || "").slice(0, 500), utm_source: String(attribution.source || "").slice(0, 120), utm_medium: String(attribution.medium || "").slice(0, 120), utm_campaign: String(attribution.campaign || "").slice(0, 160), utm_content: String(attribution.content || "").slice(0,160), last_seen_at: now }),
         }, "resolution=merge-duplicates");
       await supabaseRequest("analytics_events", {
           method: "POST",
-          body: JSON.stringify({ session_id: body.sessionId, event_name: body.event, page_path: String(body.pagePath || "/").slice(0, 300), referrer: String(attribution.referrer || "").slice(0, 500), utm_source: String(attribution.source || "").slice(0, 120), utm_medium: String(attribution.medium || "").slice(0, 120), utm_campaign: String(attribution.campaign || "").slice(0, 160), metadata: safeMetadata, user_agent: (request.headers.get("user-agent") || "").slice(0, 500) }),
+          body: JSON.stringify({ session_id: body.sessionId, event_name: body.event, page_path: String(body.pagePath || "/").slice(0, 300), referrer: String(attribution.referrer || "").slice(0, 500), utm_source: String(attribution.source || "").slice(0, 120), utm_medium: String(attribution.medium || "").slice(0, 120), utm_campaign: String(attribution.campaign || "").slice(0, 160), utm_content: String(attribution.content || "").slice(0,160), metadata: safeMetadata, user_agent: (request.headers.get("user-agent") || "").slice(0, 500) }),
         });
       const orderId = typeof safeMetadata.orderId === "string" ? safeMetadata.orderId : "";
-      const statuses: Record<string, string> = { razorpay_opened: "razorpay_opened", checkout_dismissed: "abandoned", payment_failed: "failed", payment_captured: "captured" };
-      if (orderId && statuses[body.event]) await supabaseRequest(`checkout_attempts?razorpay_order_id=eq.${encodeURIComponent(orderId)}`, { method: "PATCH", body: JSON.stringify({ status: statuses[body.event], updated_at: now }) });
+      const statuses: Record<string, string> = { razorpay_opened: "razorpay_opened", checkout_dismissed: "abandoned", payment_failed: "failed" };
+      if (orderId && statuses[body.event]) await supabaseRequest(`checkout_attempts?razorpay_order_id=eq.${encodeURIComponent(orderId)}&status=neq.captured`, { method: "PATCH", body: JSON.stringify({ status: statuses[body.event], updated_at: now }) });
     });
     return new NextResponse(null, { status: 204 });
   } catch { return NextResponse.json({ error: "Invalid request" }, { status: 400 }); }

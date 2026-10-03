@@ -2,6 +2,9 @@ import Image from "next/image";
 import CreatorVideo from "./creator-video";
 import Link from "next/link";
 import PurchaseButton from "./purchase-button";
+import OfferPrice, { OfferTerms, PurchaseTrust, LaunchFaq } from "./offer-price";
+import { initialOfferStatus } from "../lib/launch-offer";
+import { OFFER_CONFIG, type OfferStatus } from "../lib/offer-config";
 
 const resources = [
   ["01", "The AI Job Search Blueprint", "Use 50 guided prompts to understand your value and move from targeting to interviews."],
@@ -23,30 +26,32 @@ const faqs = [
   ["Will this work if I am not technical?", "Yes. Career Pilot is designed primarily for non-technical professionals, freshers and career switchers who want a clearer job-search process."],
   ["Do I need a paid AI tool?", "No. The prompts work with general-purpose assistants such as ChatGPT, Claude and Gemini, including their free versions subject to each service's limits."],
   ["Can the system guarantee interviews or a job?", "No. It helps you run a clearer, more targeted and repeatable search, but hiring outcomes depend on your experience, the market and employer decisions."],
-  ["What is the refund policy?", "Because the bundle is delivered instantly as a digital download, purchases are generally final once access is provided. Billing errors, duplicate charges and delivery problems are reviewed individually."],
+  ["What is the refund policy?", "You can request a refund within 7 days of purchase. Email arkzlab@gmail.com with your Razorpay payment ID."],
   ["How do I receive the files?", "After Razorpay verifies payment, a secure one-click ZIP download appears immediately. Optional individual-file links are also provided for 15 minutes."],
 ];
 
-const structuredData = {
+function structuredDataFor(offer: OfferStatus, questions: typeof faqs) { return {
   "@context": "https://schema.org",
   "@graph": [
     { "@type": "Organization", "@id": "https://careerpilot.store/#organization", name: "Career Pilot", url: "https://careerpilot.store", email: "arkzlab@gmail.com" },
     { "@type": "WebSite", "@id": "https://careerpilot.store/#website", name: "Career Pilot", url: "https://careerpilot.store", publisher: { "@id": "https://careerpilot.store/#organization" } },
-    { "@type": "Product", "@id": "https://careerpilot.store/#product", name: "Career Pilot AI Job Search Bundle", description: "A six-resource AI job-search implementation system.", image: "https://careerpilot.store/assets/career-pilot-bundle-white.png", brand: { "@type": "Brand", name: "Career Pilot" }, offers: { "@type": "Offer", url: "https://careerpilot.store", priceCurrency: "INR", price: "499", availability: "https://schema.org/OnlineOnly", itemCondition: "https://schema.org/NewCondition", hasMerchantReturnPolicy: { "@type": "MerchantReturnPolicy", applicableCountry: "IN", returnPolicyCategory: "https://schema.org/MerchantReturnNotPermitted", merchantReturnLink: "https://careerpilot.store/refund-policy" } } },
-    { "@type": "FAQPage", mainEntity: faqs.map(([question, answer]) => ({ "@type": "Question", name: question, acceptedAnswer: { "@type": "Answer", text: answer } })) },
+    { "@type": "Product", "@id": "https://careerpilot.store/#product", name: "Career Pilot AI Job Search Bundle", description: "A six-resource AI job-search implementation system.", image: "https://careerpilot.store/assets/career-pilot-bundle-white.png", brand: { "@type": "Brand", name: "Career Pilot" }, offers: { "@type": "Offer", url: "https://careerpilot.store", priceCurrency: "INR", price: String(offer.currentPrice), availability: "https://schema.org/OnlineOnly", itemCondition: "https://schema.org/NewCondition", hasMerchantReturnPolicy: { "@type": "MerchantReturnPolicy", applicableCountry: "IN", merchantReturnDays: 7, returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow", merchantReturnLink: "https://careerpilot.store/refund-policy" } } },
+    { "@type": "FAQPage", mainEntity: questions.map(([question, answer]) => ({ "@type": "Question", name: question, acceptedAnswer: { "@type": "Answer", text: answer } })) },
   ],
-};
+}; }
 
 function Mark() { return <span className="mark" aria-hidden="true">✦</span>; }
-function TrustLine() { return <p className="sales-trust">Instant digital access <span>·</span> Secure Razorpay checkout <span>·</span> ChatGPT, Claude &amp; Gemini</p>; }
-function SectionCta() { return <div className="sales-inline-cta"><PurchaseButton label="Get the complete bundle — ₹499" /><TrustLine /></div>; }
+function TrustLine() { return <PurchaseTrust />; }
+function SectionCta() { return <div className="sales-inline-cta"><PurchaseButton  /><TrustLine /></div>; }
 
-export default function Home() {
+export default async function Home() {
+  const offer = await initialOfferStatus();
+  const questions = offer.launchActive ? [[`Why ₹${OFFER_CONFIG.LAUNCH_PRICE}?`, `It’s a launch price for the first ${OFFER_CONFIG.LAUNCH_CAP} buyers. After that, the price is ₹${OFFER_CONFIG.POST_LAUNCH_PRICE}.`], ...faqs] : faqs;
   return <main className="sales-page">
-    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }} />
-    <header className="sales-nav shell"><a className="wordmark" href="#top"><Mark />career pilot</a><nav aria-label="Primary navigation"><a href="#inside">Inside</a><a href="#samples">Samples</a><a href="#stories">Stories</a><a href="#faq">FAQ</a></nav><PurchaseButton compact label="Get the bundle" /></header>
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredDataFor(offer, questions)).replace(/</g, "\\u003c") }} />
+    <header className="sales-nav shell"><a className="wordmark" href="#top"><Mark />career pilot</a><nav aria-label="Primary navigation"><a href="#inside">Inside</a><a href="#samples">Samples</a><a href="#stories">Stories</a><a href="#faq">FAQ</a></nav><PurchaseButton compact  /></header>
 
-    <section className="sales-hero shell" id="top"><div className="sales-hero-copy"><h1>Don&apos;t apply to jobs.<br /><em>Not until you&apos;ve done this first.</em></h1><p>Tailor your resume to the role, communicate your real value and follow a job-search system you can repeat.</p><div className="sales-hero-price">₹499 <span>one-time</span></div><PurchaseButton label="Get the complete bundle — ₹499" /><TrustLine /></div><div className="sales-hero-art"><Image src="/assets/career-pilot-bundle-white.png" alt="Career Pilot six-resource AI job-search bundle" width={1536} height={1024} sizes="(max-width: 600px) calc(112vw - 36px), (max-width: 900px) min(calc(112vw - 45px), 762px), (max-width: 1496px) calc(60.32vw - 58px), 845px" priority fetchPriority="high" /></div></section>
+    <section className="sales-hero shell" id="top"><div className="sales-hero-copy"><h1>Don&apos;t apply to jobs.<br /><em>Not until you&apos;ve done this first.</em></h1><p>Tailor your resume to the role, communicate your real value and follow a job-search system you can repeat.</p><OfferPrice /><PurchaseButton  /><TrustLine /></div><div className="sales-hero-art"><Image src="/assets/career-pilot-bundle-white.png" alt="Career Pilot six-resource AI job-search bundle" width={1536} height={1024} sizes="(max-width: 600px) calc(112vw - 36px), (max-width: 900px) min(calc(112vw - 45px), 762px), (max-width: 1496px) calc(60.32vw - 58px), 845px" priority fetchPriority="high" /></div></section>
 
     <aside className="proof-strip"><div className="shell"><blockquote>“The biggest difference was having an actual process to follow.”</blockquote><span>Rohan · B.Com Graduate · Pune</span><b>67-page Blueprint · 50 prompts · 6 connected resources</b></div></aside>
 
@@ -64,15 +69,15 @@ export default function Home() {
 
     <section className="sales-audience"><div className="shell"><div><h2>Who it&apos;s for</h2><ul><li>Freshers who need a structured starting point</li><li>Career switchers translating existing experience</li><li>Non-technical professionals using AI thoughtfully</li><li>Job seekers tired of random applications</li></ul></div><div><h2>Who it&apos;s not for</h2><ul><li>Anyone looking to fabricate qualifications</li><li>Anyone expecting guaranteed interviews or employment</li><li>Anyone wanting an automated mass-application bot</li></ul></div></div></section>
 
-    <section className="sales-offer" id="buy"><div className="shell sales-offer-grid"><div><span>The complete Career Pilot system</span><h2>Everything you need to<br /><em>apply with intention.</em></h2><p>Six connected resources for targeting roles, strengthening applications and building a repeatable job-search routine.</p></div><div><ol>{resources.map(([, title]) => <li key={title}>{title}</li>)}</ol><div className="sales-offer-price"><span>One-time payment</span><b>₹499</b></div><PurchaseButton light label="Get the complete bundle — ₹499" /><TrustLine /></div></div></section>
+    <section className="sales-offer" id="buy"><div className="shell sales-offer-grid"><div><span>The complete Career Pilot system</span><h2>Everything you need to<br /><em>apply with intention.</em></h2><p>Six connected resources for targeting roles, strengthening applications and building a repeatable job-search routine.</p></div><div><ol>{resources.map(([, title]) => <li key={title}>{title}</li>)}</ol><OfferPrice kind="section" /><OfferTerms /><PurchaseButton light  /><TrustLine /></div></div></section>
 
-    <section className="faq shell" id="faq"><h2>Questions,<br /><em>answered.</em></h2><div>{faqs.map(([question, answer]) => <details key={question}><summary>{question}<span>+</span></summary><p>{answer}</p></details>)}</div></section>
+    <section className="faq shell" id="faq"><h2>Questions,<br /><em>answered.</em></h2><div><LaunchFaq />{faqs.map(([question, answer]) => <details key={question}><summary>{question}<span>+</span></summary><p>{answer}</p></details>)}</div></section>
 
     <section className="quiet-free shell"><div><span>Not ready yet?</span><h2>Start useful.<br /><em>Start free.</em></h2></div><div><Link href="/job-fit-check">Free Job Fit Checker →</Link><Link href="/free-ai-job-search-prompts">10 free AI prompts →</Link><Link href="/blog">Practical job-search guides →</Link></div></section>
 
-    <section className="sales-final"><div className="shell"><h2>Your next application<br /><em>can be more intentional.</em></h2><PurchaseButton light label="Get the complete bundle — ₹499" /><TrustLine /></div></section>
+    <section className="sales-final"><div className="shell"><h2>Your next application<br /><em>can be more intentional.</em></h2><PurchaseButton light  /><TrustLine /></div></section>
 
     <footer className="footer shell"><a className="wordmark" href="#top"><Mark />career pilot</a><div><Link href="/job-fit-check">Job Fit Check</Link><Link href="/blog">Guides</Link><Link href="/about">About</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/contact">Contact</Link></div></footer>
-    <div className="mobile-buy-bar"><div><span>Complete bundle</span><b>₹499</b></div><PurchaseButton compact label="Get the bundle" /></div>
+    <div className="mobile-buy-bar"><div><span>Complete bundle</span><OfferPrice kind="sticky" /></div><PurchaseButton compact  /></div>
   </main>;
 }

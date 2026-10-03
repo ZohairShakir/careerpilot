@@ -1,7 +1,8 @@
 import crypto from "node:crypto";
+import type { PriceTier } from "./offer-config";
 
 export const RECEIPT_COOKIE = "careerpilot_purchase";
-type Receipt = { paymentId: string; orderId: string; amount: number; expiresAt: number };
+type Receipt = { paymentId: string; orderId: string; amount: number; priceTier?: PriceTier; expiresAt: number };
 function secret() {
   if (!process.env.DOWNLOAD_SIGNING_SECRET) throw new Error("Download signing is not configured");
   return process.env.DOWNLOAD_SIGNING_SECRET;

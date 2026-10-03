@@ -769,3 +769,16 @@ h1 em,h2 em { font-weight:400; }
 .thank-you-page { max-width: 720px; padding-top: 80px; padding-bottom: 80px; }
 .thank-you-page h1 { font-size: clamp(2rem, 5vw, 3rem); line-height: 1.15; margin-bottom: 24px; }
 .thank-you-page .text-link { display: inline-block; margin-top: 32px; }
+
+/* Launch pricing uses the existing purchase blocks. */
+.offer-pricing { display:block; }
+.offer-price-line { display:flex; flex-wrap:wrap; align-items:baseline; gap:12px; }
+.offer-pricing del { font-size:24px; font-weight:400; color:var(--muted); }
+.offer-pricing .offer-price-line b { font-weight:400; }
+.offer-pricing .offer-price-line span { font-size:12px; }
+.offer-availability { display:flex; flex-wrap:wrap; gap:6px 16px; margin-top:12px; }
+.offer-availability small { font:600 12px/1.5 'DM Sans',sans-serif; color:var(--green); }
+.offer-terms { font-size:13px; line-height:1.5; color:var(--muted); }
+.sales-offer .offer-availability small,.sales-offer .offer-terms { color:inherit; }
+.fit-offer-price.offer-pricing .offer-price-line b { font-size:38px; }
+.mobile-buy-bar>.buy-button { max-width:66%; padding-inline:12px; font-size:12px; }

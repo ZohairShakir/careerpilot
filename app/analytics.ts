@@ -1,6 +1,7 @@
 "use client";
 
 import { pixel } from "./meta-pixel";
+import { OFFER_CONFIG } from "../lib/offer-config";
 
 export type FunnelEvent =
   | "page_view"
@@ -76,10 +77,10 @@ export function analyticsContext() {
 export function track(event: FunnelEvent, metadata: Record<string, string | number | boolean> = {}) {
   if (event === "page_view") {
     pixel("PageView");
-    if (location.pathname === "/") pixel("ViewContent", 499);
+    if (location.pathname === "/") pixel("ViewContent", Number(metadata.value ?? OFFER_CONFIG.POST_LAUNCH_PRICE));
   }
-  if (event === "bundle_cta_clicked") pixel("AddToCart", Number(metadata.value ?? 499));
-  if (event === "razorpay_opened") pixel("InitiateCheckout", Number(metadata.value ?? 499));
+  if (event === "bundle_cta_clicked") pixel("AddToCart", Number(metadata.value ?? OFFER_CONFIG.POST_LAUNCH_PRICE));
+  if (event === "razorpay_opened") pixel("InitiateCheckout", Number(metadata.value ?? OFFER_CONFIG.POST_LAUNCH_PRICE));
   if (event === "payment_captured") pixel("Purchase", Number(metadata.value), String(metadata.paymentId));
   const context = analyticsContext();
   const payload = JSON.stringify({ event, ...context, pagePath: location.pathname, metadata });
@@ -90,9 +91,9 @@ export function track(event: FunnelEvent, metadata: Record<string, string | numb
     page_location: location.href,
     page_path: location.pathname,
     currency: "INR",
-    value: metadata.value ?? (event === "payment_captured" || event === "checkout_details_submitted" ? 499 : undefined),
+    value: metadata.value ?? (event === "payment_captured" || event === "checkout_details_submitted" ? OFFER_CONFIG.POST_LAUNCH_PRICE : undefined),
     transaction_id: metadata.paymentId,
-    items: [{ item_id: "career-pilot-bundle", item_name: "Career Pilot AI Job Search Bundle", price: metadata.value ?? 499, quantity: 1 }],
+    items: [{ item_id: "career-pilot-bundle", item_name: "Career Pilot AI Job Search Bundle", price: metadata.value ?? OFFER_CONFIG.POST_LAUNCH_PRICE, quantity: 1 }],
     ...metadata,
   });
 }
