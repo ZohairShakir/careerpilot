@@ -62,7 +62,7 @@ export default async function Home() {
         <div className="conversion-hero-actions"><a className="readiness-link" href="#readiness">Check my job-search readiness — free</a><div className="hero-purchase"><PurchaseButton label="Get the complete bundle" /></div></div>
         <PurchaseTrust />
       </div>
-      <div className="conversion-hero-art"><Image src="/assets/career-pilot-bundle-white.png" alt="Career Pilot Blueprint, ATS-ready resume template, job-search checklist, and application tracker" width={1536} height={1024} sizes="(max-width: 800px) 100vw, 52vw" priority fetchPriority="high" /></div>
+      <div className="conversion-hero-art"><Image src="/assets/career-pilot-bundle-cutout.png" alt="Career Pilot Blueprint, ATS-ready resume template, job-search checklist, and application tracker" width={1536} height={1024} sizes="(max-width: 800px) 100vw, 52vw" priority fetchPriority="high" /></div>
     </section>
 
     <div className="readiness-intro shell"><span aria-hidden="true" /><p>A 3-minute readiness check across targeting, application strength, and consistency.</p></div>
