@@ -32,7 +32,9 @@ export type FunnelEvent =
   | "result_revealed"
   | "offer_viewed_after_lead"
   | "offer_clicked_after_lead"
-  | "lead_to_purchase";
+  | "lead_to_purchase"
+  | "readiness_assessment_started"
+  | "readiness_assessment_completed";
 
 declare global {
   interface Window {
