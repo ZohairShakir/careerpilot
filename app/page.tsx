@@ -51,7 +51,7 @@ export default async function Home() {
 
     <header className="conversion-nav shell">
       <a className="wordmark" href="#top"><Mark />career pilot</a>
-      <nav aria-label="Primary navigation"><a href="#readiness">Job Fit Check</a><a href="#inside">Inside the bundle</a><a href="#stories">Stories</a><a href="#faq">FAQ</a></nav>
+      <nav aria-label="Primary navigation"><Link href="/job-fit-check">Resume Match</Link><Link href="/blog">Guides</Link><Link href="/free-ai-job-search-prompts">Free prompts</Link><a href="#inside">Bundle</a><a href="#faq">FAQ</a></nav>
       <PurchaseButton compact />
     </header>
 
@@ -59,7 +59,7 @@ export default async function Home() {
       <div className="conversion-hero-copy">
         <h1>Stop mass-applying.<br /><em>Start landing interviews.</em></h1>
         <p>Get a properly tailored, ATS-ready application done in 75 minutes—without guessing prompts, mass-applying, or starting from scratch.</p>
-        <div className="conversion-hero-actions"><a className="readiness-link" href="#readiness">Check my job-search readiness — free</a><div className="hero-purchase"><PurchaseButton label="Get the complete bundle" /></div></div>
+        <div className="conversion-hero-actions"><Link className="readiness-link" href="/job-fit-check">Check my résumé against a job — free</Link><div className="hero-purchase"><PurchaseButton label="Get the complete bundle" /></div></div>
         <PurchaseTrust />
       </div>
       <div className="conversion-hero-art"><Image src="/assets/career-pilot-bundle-cutout.png" alt="Career Pilot Blueprint, ATS-ready resume template, job-search checklist, and application tracker" width={1536} height={1024} sizes="(max-width: 800px) 100vw, 52vw" priority fetchPriority="high" /></div>
@@ -78,13 +78,14 @@ export default async function Home() {
     </div></section>
 
     <section className="proof-section shell" id="stories">
-      <header><h2>Proof you can inspect.</h2><p>Real product pages, on-camera job-search perspectives, and unhidden feedback—not a carousel.</p></header>
+      <header><h2>See the system in action.</h2><p>Preview real product pages, watch practical job-search guidance, and read individual experiences with the system.</p></header>
       <div className="proof-wall">
-        <figure className="proof-video"><CreatorVideo poster="/assets/creator-advice/creator-advice-1.jpg" label="On-camera perspective about building a better job-search process" src="/assets/creator-advice/creator-advice-1.mp4" /><figcaption>Why more applications are not a substitute for a better process.</figcaption></figure>
-        <figure className="proof-video"><CreatorVideo poster="/assets/creator-advice/creator-advice-3.jpg" label="On-camera perspective about tailoring a resume to a job description" src="/assets/creator-advice/creator-advice-3.mp4" /><figcaption>How to compare what a role needs with what your résumé shows.</figcaption></figure>
+        <figure className="proof-video"><CreatorVideo poster="/assets/creator-advice/creator-advice-1.jpg" label="On-camera perspective about building a better job-search process" src="/assets/creator-advice/creator-advice-1.mp4" /><figcaption><span>Job-search guidance</span>Why more applications are not a substitute for a better process.</figcaption></figure>
+        <figure className="proof-video"><CreatorVideo poster="/assets/creator-advice/creator-advice-3.jpg" label="On-camera perspective about tailoring a resume to a job description" src="/assets/creator-advice/creator-advice-3.mp4" /><figcaption><span>Job-search guidance</span>How to compare what a role needs with what your résumé shows.</figcaption></figure>
         <article className="proof-featured-quote"><span aria-hidden="true">“</span><blockquote>“{testimonials[2].quote}”</blockquote><footer><strong>{testimonials[2].name}</strong><small>{testimonials[2].meta}</small></footer></article>
       </div>
       <div className="proof-quotes">{testimonials.slice(0, 2).map((item) => <article key={item.name}><blockquote>“{item.quote}”</blockquote><footer><strong>{item.name}</strong><small>{item.meta}</small></footer></article>)}</div>
+      <p className="proof-note">Individual experiences vary and do not guarantee interviews or employment.</p>
     </section>
 
     <section className="conversion-offer" id="buy"><div className="shell conversion-offer-grid">
@@ -95,9 +96,9 @@ export default async function Home() {
 
     <section className="conversion-faq shell" id="faq"><h2>Questions,<br />answered.</h2><div><LaunchFaq />{faqs.map(([question, answer]) => <details key={question}><summary>{question}<span>+</span></summary><p>{answer}</p></details>)}</div></section>
 
-    <section className="conversion-final shell"><h2>Make your next<br />application intentional.</h2><p>Clearer roles. Stronger applications. A more focused you.</p><div><a className="readiness-link outline" href="#readiness">Check my readiness — free</a><PurchaseButton label="Get the bundle" /></div></section>
+    <section className="conversion-final shell"><h2>Make your next<br />application intentional.</h2><p>Clearer roles. Stronger applications. A more focused you.</p><div><Link className="readiness-link outline" href="/job-fit-check">Run the free Resume Match Checker</Link><PurchaseButton label="Get the bundle" /></div></section>
 
-    <footer className="conversion-footer shell"><a className="wordmark" href="#top"><Mark />career pilot</a><p>A more focused you.</p><nav aria-label="Footer navigation"><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/refund-policy">Refund policy</Link><Link href="/contact">Contact</Link></nav></footer>
+    <footer className="conversion-footer shell"><a className="wordmark" href="#top"><Mark />career pilot</a><p>A more focused you.</p><nav aria-label="Footer navigation"><Link href="/job-fit-check">Resume Match Checker</Link><Link href="/blog">Guides</Link><Link href="/free-ai-job-search-prompts">Free prompts</Link><Link href="/about">About</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/refund-policy">Refund policy</Link><Link href="/contact">Contact</Link></nav></footer>
     <div className="mobile-buy-bar"><div><span>Complete bundle</span><OfferPrice kind="sticky" /></div><PurchaseButton compact /></div>
   </main>;
 }

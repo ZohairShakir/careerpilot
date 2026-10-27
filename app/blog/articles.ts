@@ -63,6 +63,58 @@ export const articles: Article[] = [
       { heading: "Day 7: Build momentum", paragraphs: ["Prepare likely interview questions, practise evidence-led answers, create follow-up messages, and set a realistic weekly rhythm for applications, outreach, interviews, and review."] },
     ],
   },
+  {
+    slug: "ats-friendly-resume-format-for-freshers",
+    title: "An ATS-Friendly Résumé Format for Freshers",
+    description: "Build a clear, truthful fresher résumé that is easy for applicant-tracking systems and recruiters to understand.",
+    eyebrow: "Fresher résumé guide",
+    readTime: "7 min read",
+    sections: [
+      { heading: "What ATS-friendly actually means", paragraphs: ["An ATS-friendly résumé is not a document packed with keywords. It is a clearly structured file whose headings, dates, job titles, skills, and experience can be read without guessing.", "The same choices usually help human readers too: a simple layout, familiar section names, concise language, and evidence that connects to the target role."] },
+      { heading: "Use a dependable section order", steps: ["Name and contact details", "A short professional summary tailored to the target role", "Relevant skills and tools", "Projects, internships, volunteering, or work experience", "Education and relevant certifications"] },
+      { heading: "Turn projects into evidence", paragraphs: ["Freshers often have more evidence than they think. Coursework, student clubs, freelance work, competitions, volunteering, and personal projects can show how you solve problems, collaborate, communicate, research, analyse information, or use specific tools.", "Describe the goal, what you personally did, the tools or methods you used, and the observable outcome. Do not present a group result as solely your own contribution."] },
+      { heading: "Check the file before applying", steps: ["Use a standard font and avoid text placed inside images.", "Keep important information out of headers, footers, charts, and decorative sidebars.", "Save the file in the format the employer requests, usually DOCX or PDF.", "Copy the text into a plain-text editor to confirm the reading order still makes sense.", "Compare the final résumé with the specific job description and remove unsupported claims."] },
+    ],
+  },
+  {
+    slug: "resume-job-description-match-checklist",
+    title: "Résumé vs Job Description: A Practical Match Checklist",
+    description: "Compare a résumé with a job description using evidence, priorities, and honest gaps instead of an unexplained match score.",
+    eyebrow: "Application checklist",
+    readTime: "8 min read",
+    sections: [
+      { heading: "Start with the employer’s priorities", paragraphs: ["Read the job description once for context, then a second time to identify repeated responsibilities, required tools, experience levels, and outcomes. Repetition and placement usually reveal what matters most.", "Separate essential requirements from preferred ones. A long list of nice-to-have skills should not carry the same weight as the role’s core responsibilities."] },
+      { heading: "Classify every important requirement", steps: ["Demonstrated: the résumé contains clear, specific evidence.", "Unclear: related experience may exist, but the connection is weak or buried.", "Not demonstrated: the résumé does not currently show relevant evidence.", "Not applicable: the requirement is not important enough to influence this application."] },
+      { heading: "Improve unclear evidence first", paragraphs: ["An unclear match is often the easiest opportunity. Reorder a bullet, name the relevant tool, explain the problem you solved, or add context that helps a recruiter understand why the experience matters.", "Only add information you can support. If the experience is not real, keep it as a gap and decide whether the role is still realistic."] },
+      { heading: "Run a final application check", steps: ["Does the summary describe the target role and your strongest relevant evidence?", "Are the most important genuine skills easy to find?", "Do the first bullets under each role support the employer’s priorities?", "Can you explain every claim with a real example in an interview?", "Are there critical requirements with no evidence that make another role a better use of your time?"] },
+    ],
+  },
+  {
+    slug: "job-application-tracker-guide",
+    title: "How to Track Job Applications Without Losing Follow-Ups",
+    description: "Use a simple job-application tracker to manage deadlines, contacts, follow-ups, interviews, and lessons from each application.",
+    eyebrow: "Job-search organization",
+    readTime: "6 min read",
+    sections: [
+      { heading: "Track decisions, not just application counts", paragraphs: ["A useful tracker is more than a list of companies. It helps you remember why a role was worth applying to, which résumé version you used, who you contacted, and what should happen next.", "The goal is not to maximize the number of rows. It is to make each application easier to manage and improve the quality of your next decision."] },
+      { heading: "The fields worth keeping", steps: ["Company, role, location, and job link", "Date found, application deadline, and date applied", "Fit notes and the most important requirements", "Résumé version and supporting documents used", "Recruiter, hiring manager, referral, or other contact", "Current stage, next action, and follow-up date", "Outcome and a short lesson"] },
+      { heading: "Create a small follow-up routine", paragraphs: ["Review the tracker at the same time two or three times a week. Close expired roles, prepare upcoming applications, send appropriate follow-ups, and schedule interview preparation before it becomes urgent.", "Use one clear next-action field. A row without a next action is information; a row with a next action becomes part of a working system."] },
+      { heading: "Use the tracker to improve your strategy", steps: ["Compare response rates across role types rather than judging yourself by total applications.", "Notice which résumé evidence leads to conversations.", "Identify repeated skill gaps across strong-fit roles.", "Record which outreach messages create genuine replies.", "Stop spending time on channels or roles that repeatedly show poor fit."] },
+    ],
+  },
+  {
+    slug: "write-resume-bullets-without-inventing-metrics",
+    title: "How to Write Strong Résumé Bullets Without Inventing Metrics",
+    description: "Write specific, credible résumé bullets when you do not have revenue figures, percentages, or other impressive-looking numbers.",
+    eyebrow: "Résumé writing guide",
+    readTime: "7 min read",
+    sections: [
+      { heading: "Specific does not always mean numerical", paragraphs: ["Numbers are useful when they are accurate and meaningful, but a bullet can be strong without them. Recruiters also need to understand the problem, your contribution, the complexity of the work, the people involved, and what changed.", "Invented percentages weaken credibility. If you cannot explain where a number came from, leave it out."] },
+      { heading: "Build the bullet from four parts", steps: ["Context: the team, customer, project, or problem", "Action: what you personally did", "Method: the tool, skill, process, or decision you used", "Outcome: what became clearer, faster, safer, easier, more consistent, or ready for the next step"] },
+      { heading: "Use honest forms of scale", paragraphs: ["Scale can be described through scope instead of a fabricated result. You might name the number of stakeholders, documents reviewed, product areas supported, locations covered, deadlines met, workflows documented, or tools integrated—only when those details are true.", "Qualitative outcomes can also be concrete: reduced ambiguity, created a repeatable process, enabled a handoff, improved visibility, supported a launch, or resolved a recurring issue."] },
+      { heading: "Audit every bullet before using it", steps: ["Can you explain the situation and your contribution in an interview?", "Does the opening verb describe what you actually did?", "Is the method specific enough to distinguish the work from a generic responsibility?", "Does the outcome follow logically from the action?", "Would a former colleague recognize the bullet as an accurate description?"] },
+    ],
+  },
 ];
 
 export function getArticle(slug: string) {
