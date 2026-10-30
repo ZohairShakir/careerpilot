@@ -19,6 +19,7 @@ export const metadata: Metadata = {
   creator: "Career Pilot",
   publisher: "Career Pilot",
   referrer: "origin-when-cross-origin",
+  other: { "p:domain_verify": "74b750c3e82fc1cca67dcd45a8d43468" },
   alternates: { canonical: "/" },
   category: "Career development",
   keywords: ["AI job search", "job fit checker", "resume job description match", "AI resume template", "job search checklist", "AI prompts for job seekers", "career planning"],
