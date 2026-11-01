@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
+import { headers } from "next/headers";
 import CreatorVideo from "./creator-video";
+import FlashOfferBar from "./flash-offer-bar";
 import OfferPrice, { LaunchFaq, OfferTerms, PurchaseTrust } from "./offer-price";
 import PurchaseButton from "./purchase-button";
 import ReadinessScorecard from "./readiness-scorecard";
@@ -45,21 +47,23 @@ function structuredDataFor(offer: OfferStatus) { return {
 function Mark() { return <span className="mark" aria-hidden="true">✦</span>; }
 
 export default async function Home() {
-  const offer = await initialOfferStatus();
+  const offer = await initialOfferStatus((await headers()).get("x-careerpilot-offer"));
   return <main className="conversion-page">
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredDataFor(offer)).replace(/</g, "\\u003c") }} />
+
+    <FlashOfferBar />
 
     <header className="conversion-nav shell">
       <a className="wordmark" href="#top"><Mark />career pilot</a>
       <nav aria-label="Primary navigation"><Link href="/job-fit-check">Resume Match</Link><Link href="/blog">Guides</Link><Link href="/free-ai-job-search-prompts">Free prompts</Link><a href="#inside">Bundle</a><a href="#faq">FAQ</a></nav>
-      <PurchaseButton compact />
+      <PurchaseButton compact label="Get it now" />
     </header>
 
     <section className="conversion-hero shell" id="top">
       <div className="conversion-hero-copy">
         <h1>Stop mass-applying.<br /><em>Start landing interviews.</em></h1>
         <p>Get a properly tailored, ATS-ready application done in 75 minutes—without guessing prompts, mass-applying, or starting from scratch.</p>
-        <div className="conversion-hero-actions"><Link className="readiness-link" href="/job-fit-check">Check my résumé against a job — free</Link><div className="hero-purchase"><PurchaseButton label="Get the complete bundle" /></div></div>
+        <div className="conversion-hero-actions"><Link className="readiness-link" href="/job-fit-check">Check my résumé against a job — free</Link><div className="hero-purchase"><PurchaseButton label="Get it now" /></div></div>
         <PurchaseTrust />
       </div>
       <div className="conversion-hero-art"><Image src="/assets/career-pilot-bundle-cutout.png" alt="Career Pilot Blueprint, ATS-ready resume template, job-search checklist, and application tracker" width={1536} height={1024} sizes="(max-width: 800px) 100vw, 52vw" priority fetchPriority="high" /></div>
@@ -91,14 +95,14 @@ export default async function Home() {
     <section className="conversion-offer" id="buy"><div className="shell conversion-offer-grid">
       <div className="conversion-offer-copy"><h2>Your complete<br />job-search system.</h2><p>Six connected resources for targeting roles, tailoring applications, and building a repeatable routine.</p><ol>{resources.map(([number, title]) => <li key={number}><span>{number}</span>{title}</li>)}</ol></div>
       <div className="conversion-offer-art"><Image src="/assets/career-pilot-bundle.png" alt="Career Pilot six-resource job-search bundle" width={1536} height={1024} sizes="(max-width: 800px) 100vw, 45vw" /></div>
-      <div className="conversion-offer-buy"><OfferPrice kind="section" /><OfferTerms /><PurchaseButton light label="Get the complete bundle" /><PurchaseTrust /></div>
+      <div className="conversion-offer-buy"><OfferPrice kind="section" /><OfferTerms /><PurchaseButton light label="Get it now" /><PurchaseTrust /></div>
     </div></section>
 
     <section className="conversion-faq shell" id="faq"><h2>Questions,<br />answered.</h2><div><LaunchFaq />{faqs.map(([question, answer]) => <details key={question}><summary>{question}<span>+</span></summary><p>{answer}</p></details>)}</div></section>
 
-    <section className="conversion-final shell"><h2>Make your next<br />application intentional.</h2><p>Clearer roles. Stronger applications. A more focused you.</p><div><Link className="readiness-link outline" href="/job-fit-check">Run the free Resume Match Checker</Link><PurchaseButton label="Get the bundle" /></div></section>
+    <section className="conversion-final shell"><h2>Make your next<br />application intentional.</h2><p>Clearer roles. Stronger applications. A more focused you.</p><div><Link className="readiness-link outline" href="/job-fit-check">Run the free Resume Match Checker</Link><PurchaseButton label="Get it now" /></div></section>
 
     <footer className="conversion-footer shell"><a className="wordmark" href="#top"><Mark />career pilot</a><p>A more focused you.</p><nav aria-label="Footer navigation"><Link href="/job-fit-check">Resume Match Checker</Link><Link href="/blog">Guides</Link><Link href="/free-ai-job-search-prompts">Free prompts</Link><Link href="/about">About</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/refund-policy">Refund policy</Link><Link href="/contact">Contact</Link></nav></footer>
-    <div className="mobile-buy-bar"><div><span>Complete bundle</span><OfferPrice kind="sticky" /></div><PurchaseButton compact /></div>
+    <div className="mobile-buy-bar"><div><span>Complete bundle</span><OfferPrice kind="sticky" /></div><PurchaseButton compact label="Get it now" /></div>
   </main>;
 }

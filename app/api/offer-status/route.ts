@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
-import { getOfferStatus } from "../../../lib/launch-offer";
+import { cookieValue, flashOfferCookieName } from "../../../lib/flash-offer";
+import { effectiveOfferStatus } from "../../../lib/launch-offer";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    return NextResponse.json(await getOfferStatus(), { headers: { "Cache-Control": "public, max-age=0, s-maxage=15, must-revalidate" } });
+    const token = cookieValue(request.headers.get("cookie"), flashOfferCookieName());
+    return NextResponse.json(await effectiveOfferStatus(token), { headers: { "Cache-Control": "private, no-store" } });
   } catch {
     return NextResponse.json({ error: "Offer availability is temporarily unavailable. Price is confirmed at checkout." }, { status: 503, headers: { "Cache-Control": "no-store" } });
   }

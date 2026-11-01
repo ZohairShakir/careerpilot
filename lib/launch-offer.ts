@@ -1,5 +1,6 @@
 import { cache } from "react";
 import { supabaseRequest } from "./supabase";
+import { readFlashOffer } from "./flash-offer";
 import { OFFER_CONFIG, launchEnabled, offerCampaign, type OfferStatus, type PriceTier } from "./offer-config";
 
 export function offerParameters() {
@@ -12,10 +13,24 @@ export async function offerRpc<T>(name: string, body: Record<string, unknown>) {
 }
 export const getOfferStatus = cache(async (): Promise<OfferStatus> => {
   const result = await offerRpc<{ launchActive: boolean; spotsLeft: number; currentPrice: number }>("launch_offer_status", offerParameters());
-  return { ...result, regularPrice: OFFER_CONFIG.REGULAR_PRICE };
+  return { ...result, fallbackPrice: result.currentPrice, regularPrice: OFFER_CONFIG.REGULAR_PRICE, flashActive: false, flashExpiresAt: null };
 });
-export async function initialOfferStatus(): Promise<OfferStatus> {
-  try { return await getOfferStatus(); }
-  catch { return { launchActive: launchEnabled(), spotsLeft: null, currentPrice: launchEnabled() ? OFFER_CONFIG.LAUNCH_PRICE : OFFER_CONFIG.POST_LAUNCH_PRICE, regularPrice: OFFER_CONFIG.REGULAR_PRICE }; }
+export async function effectiveOfferStatus(token?: string | null): Promise<OfferStatus> {
+  const base = await getOfferStatus();
+  const flash = await readFlashOffer(token);
+  return flash.active
+    ? { ...base, currentPrice: OFFER_CONFIG.FLASH_PRICE, flashActive: true, flashExpiresAt: flash.expiresAt }
+    : { ...base, flashExpiresAt: flash.valid ? flash.expiresAt : null };
+}
+export async function initialOfferStatus(token?: string | null): Promise<OfferStatus> {
+  try { return await effectiveOfferStatus(token); }
+  catch {
+    const currentPrice = launchEnabled() ? OFFER_CONFIG.LAUNCH_PRICE : OFFER_CONFIG.POST_LAUNCH_PRICE;
+    const flash = await readFlashOffer(token);
+    return {
+      launchActive: launchEnabled(), spotsLeft: null, currentPrice: flash.active ? OFFER_CONFIG.FLASH_PRICE : currentPrice,
+      fallbackPrice: currentPrice, regularPrice: OFFER_CONFIG.REGULAR_PRICE, flashActive: flash.active, flashExpiresAt: flash.expiresAt,
+    };
+  }
 }
 export type Reservation = { id: string; amount: number; price_tier: PriceTier; expires_at: string; campaign: string };

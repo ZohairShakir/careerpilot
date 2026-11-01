@@ -1,7 +1,7 @@
 import crypto from "node:crypto";
 import { offerParameters, offerRpc, type Reservation } from "./launch-offer";
 import { supabaseRequest } from "./supabase";
-import type { PriceTier } from "./offer-config";
+import { OFFER_CONFIG, type PriceTier } from "./offer-config";
 
 const API = "https://api.razorpay.com/v1";
 function credentials() {
@@ -13,8 +13,11 @@ function authHeader() {
   const { keyId, keySecret } = credentials();
   return `Basic ${Buffer.from(`${keyId}:${keySecret}`).toString("base64")}`;
 }
-export async function createOrder(name: string, email: string, sessionId: string | null, attribution: Record<string,string>) {
-  const reservation = await offerRpc<Reservation>("reserve_launch_order", { ...offerParameters(), p_name: name, p_email: email, p_session_id: sessionId, p_attribution: attribution });
+export async function createOrder(name: string, email: string, sessionId: string | null, attribution: Record<string,string>, flashActive = false) {
+  const commonParameters = { ...offerParameters(), p_name: name, p_email: email, p_session_id: sessionId, p_attribution: attribution };
+  const reservation = flashActive
+    ? await offerRpc<Reservation>("reserve_timed_offer_order", { ...commonParameters, p_flash_active: true, p_flash_amount: OFFER_CONFIG.FLASH_PRICE * 100 })
+    : await offerRpc<Reservation>("reserve_launch_order", commonParameters);
   let created = false;
   try {
     const response = await fetch(`${API}/orders`, {
@@ -53,7 +56,7 @@ export async function capturedPayment(paymentId: string, expectedOrderId?: strin
   if (order.amount !== payment.amount || order.currency !== payment.currency || order.notes?.product !== "career-pilot-bundle") return null;
   const tier = order.notes.price_tier;
   return { amount: payment.amount, currency: payment.currency, orderId: payment.order_id, email: payment.email || null,
-    priceTier: (tier === "launch_149" || tier === "regular_299" ? tier : "legacy") as PriceTier, reservationId: order.notes.reservation_id || null };
+    priceTier: (tier === "flash_100" || tier === "launch_149" || tier === "regular_299" ? tier : "legacy") as PriceTier, reservationId: order.notes.reservation_id || null };
 }
 export function verifyWebhook(rawBody: string, signature: string) {
   const secret = process.env.RAZORPAY_WEBHOOK_SECRET;

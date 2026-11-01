@@ -27,7 +27,7 @@ export default function PurchaseButton(props: PurchaseButtonProps) {
   }
 
   return <>
-    <button className={`buy-button ${compact ? "compact" : ""} ${light ? "light" : ""}`} onPointerEnter={preloadCheckout} onFocus={preloadCheckout} onClick={openModal}>{label ? `${label} — ₹${offer.currentPrice}` : compact ? `Get the bundle — ₹${offer.currentPrice}` : `Get the complete bundle — ₹${offer.currentPrice}`}</button>
+    <button className={`buy-button ${compact ? "compact" : ""} ${light ? "light" : ""}`} onPointerEnter={preloadCheckout} onFocus={preloadCheckout} onClick={openModal}>{label ? `${label} — ₹${offer.currentPrice}` : compact ? `Get it now — ₹${offer.currentPrice}` : `Get it now — ₹${offer.currentPrice}`}</button>
     {open ? <Suspense fallback={<div className="modal-backdrop"><section className="checkout-modal"><button className="close" aria-label="Close checkout" onClick={() => setOpen(false)}>×</button><p role="status">Opening checkout…</p></section></div>}>
       <PurchaseModal {...props} onClose={() => setOpen(false)} />
     </Suspense> : null}

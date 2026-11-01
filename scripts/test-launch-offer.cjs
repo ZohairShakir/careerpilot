@@ -9,7 +9,7 @@ const vm = require('node:vm');
 const crypto = require('node:crypto');
 const ts = require('typescript');
 const { PGlite } = require(process.env.PGLITE_MODULE || path.join(os.tmpdir(), 'careerpilot-launch-test-deps/node_modules/@electric-sql/pglite'));
-const env = { RAZORPAY_KEY_ID: 'rzp_test_local', RAZORPAY_KEY_SECRET: 'test-secret', RAZORPAY_WEBHOOK_SECRET: 'webhook-secret', LAUNCH_ENABLED: 'true', LAUNCH_TEST_RUN: 'acceptance' };
+const env = { RAZORPAY_KEY_ID: 'rzp_test_local', RAZORPAY_KEY_SECRET: 'test-secret', RAZORPAY_WEBHOOK_SECRET: 'webhook-secret', FLASH_OFFER_SECRET: 'flash-offer-test-secret', LAUNCH_ENABLED: 'true', LAUNCH_TEST_RUN: 'acceptance' };
 const modules = new Map(), orders = new Map(), payments = new Map();
 let db, unavailable = false, serial = 0;
 async function rpc(name, args) {
@@ -43,16 +43,16 @@ function load(file) {
   const exports = {};
   modules.set(file, exports);
   const code = ts.transpileModule(fs.readFileSync(file, 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, esModuleInterop: true, target: ts.ScriptTarget.ES2022 } }).outputText;
-  vm.runInNewContext(code, { exports, Buffer, console, fetch: gateway, process: { env }, Request, Response,
+  vm.runInNewContext(code, { exports, Buffer, console, fetch: gateway, process: { env }, Request, Response, TextEncoder, TextDecoder, atob, btoa, crypto: crypto.webcrypto,
     require: name => name === 'react' ? { cache: fn => fn } : name.endsWith('/supabase') || name === './supabase' ? { supabaseRequest } : name.startsWith('.') ? load(path.resolve(path.dirname(file), name + '.ts')) : require(name),
   }, { filename: file });
   return exports;
 }
-const request = body => new Request('http://localhost/api/razorpay/order', { method: 'POST', body: JSON.stringify({ name: 'Test Buyer', email: 'test@example.com', ...body }) });
+const request = (body, token) => new Request('http://localhost/api/razorpay/order', { method: 'POST', headers: token ? { cookie: `careerpilot-offer=${encodeURIComponent(token)}` } : {}, body: JSON.stringify({ name: 'Test Buyer', email: 'test@example.com', ...body }) });
 async function main() {
   db = new PGlite();
   await db.exec('create role anon; create role authenticated; create role service_role;');
-  for (const migration of ['001_analytics.sql', '005_checkout_promo_code.sql', '006_launch_offer.sql']) {
+  for (const migration of ['001_analytics.sql', '005_checkout_promo_code.sql', '006_launch_offer.sql', '007_timed_welcome_offer.sql']) {
     await db.exec(fs.readFileSync(`supabase/migrations/${migration}`, 'utf8').replace('create extension if not exists pgcrypto;', ''));
   }
   const orderRoute = load('app/api/razorpay/order/route.ts');
@@ -61,7 +61,8 @@ async function main() {
   const statusRoute = load('app/api/offer-status/route.ts');
   const config = load('lib/offer-config.ts');
   const razorpay = load('lib/razorpay.ts');
-  async function order(body = {}) { const res = await orderRoute.POST(request(body)); assert.equal(res.status, 200); return res.json(); }
+  const flashOffer = load('lib/flash-offer.ts');
+  async function order(body = {}, token = null) { const res = await orderRoute.POST(request(body, token)); assert.equal(res.status, 200); return res.json(); }
   async function capture(order, eventId = `event_${order.orderId}`, signature = true) {
     const payId = `pay_${order.orderId}`;
     payments.set(payId, { status: 'captured', amount: order.amount, currency: 'INR', order_id: order.orderId, email: 'test@example.com' });
@@ -70,16 +71,21 @@ async function main() {
       'x-razorpay-event-id': eventId, 'x-razorpay-signature': signature ? crypto.createHmac('sha256', env.RAZORPAY_WEBHOOK_SECRET).update(raw).digest('hex') : 'bad',
     } }));
   }
+  const flashToken = await flashOffer.createFlashOfferToken();
+  const welcome = await order({ amount: 1 }, flashToken);
+  assert.equal(welcome.amount, 10000); assert.equal(welcome.priceTier, 'flash_100');
+  assert.equal((await capture(welcome)).status, 200);
+  assert.equal((await offer.getOfferStatus()).spotsLeft, 20, 'welcome orders do not consume capped launch inventory');
   const first = await order({ amount: 100, price: 1, promoCode: 'FB299', attribution: { source: 'instagram', medium: 'paid', campaign: 'launch', content: 'creative_01' } });
   assert.equal(first.amount, 14900);
   assert.equal(first.priceTier, 'launch_149');
   assert.equal((await offer.getOfferStatus()).spotsLeft, 19);
-  assert.equal((await db.query('select count(*)::int as n from purchases')).rows[0].n, 0, 'created orders are not purchases');
+  assert.equal((await db.query('select count(*)::int as n from purchases')).rows[0].n, 1, 'creating the next order does not add another purchase');
   assert.equal((await capture(first, 'invalid', false)).status, 400);
   assert.equal((await capture(first)).status, 200);
   assert.equal((await capture(first)).status, 200);
   assert.equal((await capture(first, 'another_delivery')).status, 200);
-  assert.equal((await db.query('select count(*)::int as n from purchases')).rows[0].n, 1);
+  assert.equal((await db.query('select count(*)::int as n from purchases')).rows[0].n, 2);
   const stored = (await db.query('select * from checkout_attempts where razorpay_order_id=$1', [first.orderId])).rows[0];
   assert.equal(stored.utm_content, 'creative_01'); assert.equal(stored.price_tier, 'launch_149');
   assert.equal(orders.get(first.orderId).notes.utm_content, 'creative_01');
@@ -104,8 +110,8 @@ async function main() {
   env.LAUNCH_ENABLED = 'false'; env.LAUNCH_TEST_RUN = 'disabled';
   assert.equal((await order({ amount: 14900 })).amount, 29900);
   assert.equal((await offer.getOfferStatus()).launchActive, false);
-  const response = await statusRoute.GET();
-  assert.equal(response.status, 200); assert.match(response.headers.get('cache-control'), /s-maxage=15/);
+  const response = await statusRoute.GET(new Request('http://localhost/api/offer-status'));
+  assert.equal(response.status, 200); assert.match(response.headers.get('cache-control'), /private, no-store/);
   assert.equal((await response.json()).regularPrice, 499);
   env.RAZORPAY_KEY_ID = 'rzp_live_local'; assert.equal(config.offerCampaign(), 'live:launch-v1');
   env.LAUNCH_TEST_RUN = 'different'; assert.equal(config.offerCampaign(), 'live:launch-v1', 'test resets cannot reset live inventory');
@@ -116,6 +122,6 @@ async function main() {
   assert.equal((await orderRoute.POST(request({}))).status, 503);
   assert.equal((await capture(first)).status, 503, 'webhook is not acknowledged on persistence failure');
   await db.close();
-  console.log('PASS: server pricing/tamper protection, 20 paid orders, last spot allocation, expiry, webhook signatures/deduplication/retry, late paid overflow, kill switch, UTM/tier storage, API caching, live/test isolation.');
+  console.log('PASS: signed ₹100 window, server pricing/tamper protection, 20 paid orders, last spot allocation, expiry, webhook signatures/deduplication/retry, late paid overflow, kill switch, UTM/tier storage, visitor-private API status, live/test isolation.');
 }
 main().catch(error => { console.error(error); process.exitCode = 1; });

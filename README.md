@@ -57,3 +57,5 @@ Performance: checkout form code loads on purchase-button hover/focus or click in
 ## Launch offer
 
 See [launch offer setup and validation](docs/launch-offer.md) for migration requirements, test-only inventory resets, the kill switch, and verification limits.
+
+The landing page also gives a new browser a signed 10-minute ₹100 welcome window. Run `supabase/migrations/007_timed_welcome_offer.sql` before deploying the matching code, and set a separate server-only `FLASH_OFFER_SECRET` generated with `openssl rand -base64 32`. The server verifies the signed HttpOnly cookie again when creating the Razorpay order; the browser countdown never controls the charged amount.

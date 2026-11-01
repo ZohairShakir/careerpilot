@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { cookieValue, flashOfferCookieName, readFlashOffer } from "../../../../lib/flash-offer";
 import { createOrder } from "../../../../lib/razorpay";
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 export async function POST(request: Request) {
@@ -8,7 +9,9 @@ export async function POST(request: Request) {
     if (typeof name !== "string" || name.trim().length < 2 || name.length > 120 || typeof email !== "string" || email.length > 160 || !/^\S+@\S+\.\S+$/.test(email)) return NextResponse.json({ error: "Enter a valid name and email." }, { status:400 });
     const validSessionId = typeof sessionId === "string" && UUID.test(sessionId) ? sessionId : null;
     const safeAttribution = Object.fromEntries(["source","medium","campaign","content","term","referrer"].map(key => [key,String(attribution?.[key] || "").slice(0,160)]));
-    const order = await createOrder(name.trim(),email.trim().toLowerCase(),validSessionId,safeAttribution);
+    const token = cookieValue(request.headers.get("cookie"), flashOfferCookieName());
+    const flashOffer = await readFlashOffer(token);
+    const order = await createOrder(name.trim(),email.trim().toLowerCase(),validSessionId,safeAttribution,flashOffer.active);
     return NextResponse.json({ orderId: order.id, amount: order.amount, currency: order.currency, priceTier: order.priceTier, expiresAt: order.expiresAt, keyId: process.env.RAZORPAY_KEY_ID }, { headers: { "Cache-Control":"no-store" } });
   } catch (error) {
     console.error("Order creation failed",error instanceof Error ? error.message : error);

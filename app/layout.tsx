@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import "./globals.css";
 import AnalyticsProvider from "./analytics-provider";
 import GoogleAnalytics from "./google-analytics";
@@ -46,6 +47,7 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const offer = await initialOfferStatus();
+  const offerToken = (await headers()).get("x-careerpilot-offer");
+  const offer = await initialOfferStatus(offerToken);
   return <html lang="en"><head><link rel="preload" href="/fonts/dm-sans-latin-9fea608a.woff2" as="font" type="font/woff2" crossOrigin="anonymous" /><link rel="preload" href="/fonts/instrument-serif-latin-5eb09b5a.woff2" as="font" type="font/woff2" crossOrigin="anonymous" /></head><body><OfferProvider initialOffer={offer}>{children}<AnalyticsProvider /><GoogleAnalytics /><MicrosoftClarity /><MetaPixel /></OfferProvider></body></html>;
 }

@@ -831,7 +831,7 @@ h1 em,h2 em { font-weight:400; }
 /* Launch pricing uses the existing purchase blocks. */
 .offer-pricing { display:block; }
 .offer-price-line { display:flex; flex-wrap:wrap; align-items:baseline; gap:12px; }
-.offer-pricing del { font-size:24px; font-weight:400; color:var(--muted); }
+.offer-pricing del { font-size:24px; font-weight:500; color:var(--muted); text-decoration-thickness:2px; text-decoration-color:#b4543d; }
 .offer-pricing .offer-price-line b { font-weight:400; }
 .offer-pricing .offer-price-line span { font-size:12px; }
 .offer-availability { display:flex; flex-wrap:wrap; gap:6px 16px; margin-top:12px; }
@@ -840,10 +840,28 @@ h1 em,h2 em { font-weight:400; }
 .sales-offer .offer-availability small,.sales-offer .offer-terms { color:inherit; }
 .fit-offer-price.offer-pricing .offer-price-line b { font-size:38px; }
 .mobile-buy-bar>.buy-button { max-width:66%; padding-inline:12px; font-size:12px; }
+.sticky-offer-price { display:flex; align-items:baseline; gap:7px; }
+.sticky-offer-price del { color:#8b8f8c; font-size:11px; font-weight:600; text-decoration-thickness:1.5px; text-decoration-color:#b4543d; }
+.mobile-buy-bar .sticky-offer-price b { color:var(--green); font:400 25px/1 'Instrument Serif',serif; }
 
 /* 2026 conversion landing page */
 .conversion-page { overflow:hidden; background:#fff; }
 .conversion-page h1,.conversion-page h2,.conversion-page h3 { text-wrap:balance; }
+.flash-offer-bar { position:relative; z-index:20; overflow:hidden; background:var(--deep); color:#fff; }
+.flash-offer-bar::before { content:''; position:absolute; inset:-80px auto auto 52%; width:340px; height:180px; border-radius:50%; background:rgba(255,255,255,.07); filter:blur(4px); pointer-events:none; }
+.flash-offer-inner { min-height:98px; display:grid; grid-template-columns:1fr auto auto; align-items:center; gap:46px; position:relative; }
+.flash-offer-message { display:flex; align-items:center; gap:24px; min-width:0; }
+.flash-offer-message>span { max-width:120px; color:rgba(255,255,255,.66); font-size:10px; font-weight:700; line-height:1.35; letter-spacing:.13em; text-transform:uppercase; }
+.flash-offer-price { display:flex; align-items:baseline; gap:12px; white-space:nowrap; }
+.flash-offer-price del { color:rgba(255,255,255,.52); font-size:20px; font-weight:600; text-decoration-color:#ffb59f; text-decoration-thickness:2px; }
+.flash-offer-price strong { color:#fff; font:400 56px/.9 'Instrument Serif',serif; letter-spacing:-.03em; }
+.flash-offer-timer { display:flex; flex-direction:column; align-items:flex-end; gap:5px; }
+.flash-offer-timer span { color:rgba(255,255,255,.66); font-size:10px; letter-spacing:.08em; text-transform:uppercase; }
+.flash-offer-timer time { min-width:105px; color:#fff; font:600 30px/1 'DM Sans',sans-serif; letter-spacing:.06em; text-align:right; font-variant-numeric:tabular-nums; }
+.flash-offer-bar .buy-button { min-width:210px; min-height:54px; border-color:#fff; background:#fff; color:var(--deep); box-shadow:0 12px 30px rgba(0,0,0,.16); }
+.flash-offer-bar .buy-button:hover { background:var(--ivory); color:var(--deep); }
+.flash-offer-bar.is-expired { background:#26342d; }
+.flash-offer-bar.is-expired .flash-offer-message>span { max-width:none; }
 .conversion-nav { min-height:88px; display:flex; align-items:center; border-bottom:1px solid var(--line); position:relative; z-index:10; }
 .conversion-nav nav { display:flex; gap:24px; margin-left:auto; margin-right:26px; color:#3f433f; font-size:13px; }
 .conversion-nav nav a { transition:color .2s ease; }
@@ -965,6 +983,7 @@ h1 em,h2 em { font-weight:400; }
 .conversion-offer .offer-pricing del { color:rgba(255,255,255,.55); }
 .conversion-offer .offer-price-line b { color:white; font:400 58px/1 'Instrument Serif',serif; }
 .conversion-offer .offer-price-line span,.conversion-offer .offer-availability small,.conversion-offer .offer-terms { color:rgba(255,255,255,.7); }
+.conversion-offer .offer-availability.flash small:first-child { color:#fff; }
 .conversion-offer .buy-button { width:100%; }
 .conversion-offer .sales-trust { color:rgba(255,255,255,.62); text-align:center; }
 
@@ -995,6 +1014,10 @@ h1 em,h2 em { font-weight:400; }
 }
 
 @media (max-width:800px) {
+  .flash-offer-inner { gap:22px; }
+  .flash-offer-message { gap:14px; }
+  .flash-offer-message>span { display:none; }
+  .flash-offer-bar .buy-button { min-width:180px; }
   .conversion-nav nav { display:none; }
   .conversion-nav>.buy-button { margin-left:auto; }
   .conversion-hero { min-height:auto; grid-template-columns:1fr; padding-block:66px 30px; }
@@ -1035,6 +1058,19 @@ h1 em,h2 em { font-weight:400; }
 
 @media (max-width:600px) {
   .conversion-page { padding-bottom:74px; }
+  .flash-offer-inner { min-height:0; grid-template-columns:1fr auto; gap:8px 14px; padding-block:13px; }
+  .flash-offer-message { display:block; grid-column:1; grid-row:1; }
+  .flash-offer-message>span { display:block; max-width:none; margin-bottom:4px; font-size:8px; }
+  .flash-offer-price { gap:8px; }
+  .flash-offer-price del { font-size:14px; }
+  .flash-offer-price strong { font-size:44px; }
+  .flash-offer-timer { grid-column:2; grid-row:1; gap:4px; }
+  .flash-offer-timer span { font-size:8px; }
+  .flash-offer-timer time { min-width:80px; font-size:24px; }
+  .flash-offer-bar .buy-button { grid-column:1/-1; grid-row:2; width:100%; min-width:0; min-height:48px; font-size:13px; }
+  .flash-offer-bar.is-expired .flash-offer-inner { grid-template-columns:1fr; }
+  .flash-offer-bar.is-expired .flash-offer-timer { display:none; }
+  .flash-offer-bar.is-expired .flash-offer-message,.flash-offer-bar.is-expired .buy-button { grid-column:1; }
   .conversion-nav { min-height:74px; }
   .conversion-nav .wordmark { font-size:27px; }
   .conversion-nav>.buy-button { display:none; }

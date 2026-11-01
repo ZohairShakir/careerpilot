@@ -2,16 +2,22 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import type { OfferStatus } from "../lib/offer-config";
 
-const Context = createContext<{ offer: OfferStatus; refresh: () => Promise<void> } | null>(null);
+function secondsUntil(value: string | null) {
+  return value ? Math.max(0, Math.ceil((new Date(value).getTime() - Date.now()) / 1000)) : 0;
+}
+
+const Context = createContext<{ offer: OfferStatus; secondsRemaining: number; refresh: () => Promise<void> } | null>(null);
 export default function OfferProvider({ initialOffer, children }: { initialOffer: OfferStatus; children: React.ReactNode }) {
   const [offer, setOffer] = useState({ ...initialOffer, spotsLeft: null } as OfferStatus);
+  const [secondsRemaining, setSecondsRemaining] = useState(() => secondsUntil(initialOffer.flashExpiresAt));
   const refresh = useCallback(async () => {
     try {
       const response = await fetch("/api/offer-status", { cache: "no-store" });
       if (!response.ok) throw new Error("Offer status unavailable");
       const next = await response.json() as OfferStatus;
-      if (typeof next.launchActive !== "boolean" || typeof next.spotsLeft !== "number" || !Number.isFinite(next.currentPrice) || next.currentPrice <= 0) throw new Error("Invalid offer status");
+      if (typeof next.launchActive !== "boolean" || typeof next.spotsLeft !== "number" || typeof next.flashActive !== "boolean" || !Number.isFinite(next.currentPrice) || next.currentPrice <= 0 || !Number.isFinite(next.fallbackPrice) || next.fallbackPrice <= 0) throw new Error("Invalid offer status");
       setOffer(next);
+      setSecondsRemaining(secondsUntil(next.flashExpiresAt));
     } catch { setOffer(previous => ({ ...previous, spotsLeft: null })); }
   }, []);
   useEffect(() => {
@@ -22,7 +28,20 @@ export default function OfferProvider({ initialOffer, children }: { initialOffer
     document.addEventListener("visibilitychange",tick);
     return () => { window.clearInterval(timer); window.removeEventListener("focus",tick); document.removeEventListener("visibilitychange",tick); };
   }, [refresh]);
-  return <Context.Provider value={{ offer, refresh }}>{children}</Context.Provider>;
+  useEffect(() => {
+    if (!offer.flashExpiresAt) return;
+    const update = () => {
+      const remaining = secondsUntil(offer.flashExpiresAt);
+      setSecondsRemaining(remaining);
+      if (remaining === 0 && offer.flashActive) {
+        setOffer(previous => ({ ...previous, flashActive: false, currentPrice: previous.fallbackPrice }));
+      }
+    };
+    update();
+    const timer = window.setInterval(update, 1000);
+    return () => window.clearInterval(timer);
+  }, [offer.flashActive, offer.flashExpiresAt]);
+  return <Context.Provider value={{ offer, secondsRemaining, refresh }}>{children}</Context.Provider>;
 }
 export function useOffer() {
   const value = useContext(Context);

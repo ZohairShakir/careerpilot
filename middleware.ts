@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminSessionCookieName, isAdminAuthConfigured, verifyAdminSession } from "./lib/admin-session";
+import { createFlashOfferToken, flashOfferConfigured, flashOfferCookieName, FLASH_OFFER_COOKIE_MAX_AGE, readFlashOffer } from "./lib/flash-offer";
 
 function secureAdminResponse(response: NextResponse) {
   response.headers.set("Cache-Control", "no-store, max-age=0");
@@ -14,6 +15,28 @@ function secureAdminResponse(response: NextResponse) {
 }
 
 export async function middleware(request: NextRequest) {
+  if (!request.nextUrl.pathname.startsWith("/admin")) {
+    const cookieName = flashOfferCookieName();
+    const existingToken = request.cookies.get(cookieName)?.value;
+    const existingOffer = await readFlashOffer(existingToken);
+    const shouldCreateOffer = !existingToken && flashOfferConfigured();
+    const token = shouldCreateOffer ? await createFlashOfferToken() : existingToken;
+    const requestHeaders = new Headers(request.headers);
+    if (token && (shouldCreateOffer || existingOffer.valid)) requestHeaders.set("x-careerpilot-offer", token);
+    const response = NextResponse.next({ request: { headers: requestHeaders } });
+    if (shouldCreateOffer && token) {
+      response.cookies.set(cookieName, token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: FLASH_OFFER_COOKIE_MAX_AGE,
+        priority: "high",
+      });
+    }
+    return response;
+  }
+
   const isLoginPage = request.nextUrl.pathname === "/admin/login";
   const cookieName = adminSessionCookieName();
   const token = request.cookies.get(cookieName)?.value;
@@ -35,4 +58,4 @@ export async function middleware(request: NextRequest) {
   return response;
 }
 
-export const config = { matcher: "/admin/:path*" };
+export const config = { matcher: ["/((?!api|_next|favicon.ico|icon.svg|manifest.webmanifest|robots.txt|sitemap.xml|assets|fonts).*)"] };
