@@ -1,5 +1,8 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { supabaseCount, supabaseRequest } from "../../../lib/supabase";
+import { adminSessionCookieName, verifyAdminSession } from "../../../lib/admin-session";
 
 export const dynamic = "force-dynamic";
 
@@ -46,6 +49,8 @@ function filter(column: string, period: Bounds) {
 function date(value: string) { return new Intl.DateTimeFormat("en-IN", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Kolkata" }).format(new Date(value)); }
 
 export default async function AnalyticsDashboard({ searchParams }: { searchParams: Promise<Query> }) {
+  const session = (await cookies()).get(adminSessionCookieName())?.value;
+  if (!await verifyAdminSession(session)) redirect("/admin/login?error=session&next=/admin/analytics");
   const period = bounds(await searchParams);
   const eventFilter = filter("created_at", period);
   const checkoutFilter = filter("created_at", period);
@@ -73,7 +78,7 @@ export default async function AnalyticsDashboard({ searchParams }: { searchParam
   const fitCompletion = fitStarts ? Math.round((fitCompleted / fitStarts) * 10000) / 100 : 0;
 
   return <main className="dashboard">
-    <header className="dashboard-header"><div><span className="wordmark"><span className="mark">✦</span>career pilot</span><h1>Analytics</h1></div><Link href="/">View website ↗</Link></header>
+    <header className="dashboard-header"><div><span className="wordmark"><span className="mark">✦</span>career pilot</span><h1>Analytics</h1></div><div className="dashboard-actions"><Link href="/">View website ↗</Link><form action="/api/admin/logout" method="post"><button className="dashboard-logout" type="submit">Sign out</button></form></div></header>
     <section className="dashboard-filters" aria-label="Analytics date range">
       <div className="quick-filters">
         {[["today", "Today"], ["yesterday", "Yesterday"], ["all", "All time"]].map(([key, label]) => <Link key={key} className={period.key === key ? "active" : ""} href={`?range=${key}`}>{label}</Link>)}

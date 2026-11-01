@@ -21,7 +21,14 @@ The payment flow creates a Razorpay order on the server, verifies the checkout s
 
 The first-party event stream records anonymous sessions, UTM attribution, checkout progression, payment status, and downloads. Supabase views `funnel_summary` and `abandoned_checkouts` provide the initial reporting layer.
 
-Set `ANALYTICS_DASHBOARD_USER` and `ANALYTICS_DASHBOARD_PASSWORD` to protect the reporting page at `/admin/analytics` with HTTP Basic authentication.
+The reporting page at `/admin/analytics` uses a private sign-in screen and a signed, eight-hour HttpOnly session. Configure it in Vercel as follows:
+
+1. Set `ANALYTICS_DASHBOARD_USER`.
+2. Run `npm run admin:hash-password` locally and save its output as `ANALYTICS_DASHBOARD_PASSWORD_HASH`.
+3. Generate a separate session secret with `openssl rand -base64 32` and save it as `ADMIN_SESSION_SECRET`.
+4. Leave `ANALYTICS_DASHBOARD_PASSWORD` empty after migrating. It remains supported only as a temporary fallback for existing deployments.
+
+Failed sign-ins receive a generic response and are throttled per client. Admin responses are non-cacheable and carry restrictive framing, referrer, permissions, and indexing headers. Use the dashboard’s **Sign out** action when finished.
 
 ## Job Fit Check
 
