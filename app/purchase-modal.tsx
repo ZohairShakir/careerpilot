@@ -29,6 +29,7 @@ export default function PurchaseModal({ offerToken, source, prefillName, prefill
   const [error, setError] = useState("");
   const { offer, refresh } = useOffer();
   const [quotedPrice, setQuotedPrice] = useState<number | null>(null);
+  const checkoutPrice = quotedPrice ?? offer.currentPrice;
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => event.key === "Escape" && closeModal();
@@ -87,6 +88,6 @@ export default function PurchaseModal({ offerToken, source, prefillName, prefill
   }
 
   return createPortal(<div className="modal-backdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && closeModal()}><section className="checkout-modal" role="dialog" aria-modal="true" aria-labelledby="checkout-title"><button className="close" aria-label="Close checkout" onClick={closeModal}>×</button>
-      <h2 id="checkout-title">Start moving with clarity.</h2><p className="modal-intro">Enter your details to continue to secure Razorpay checkout. The final price is confirmed before you pay.</p><div className="modal-order"><span>Career Pilot AI Job Search Bundle</span><b>₹{quotedPrice ?? offer.currentPrice}</b></div><p className="modal-offer-note">Instant access · 7-day refund · Secure Razorpay checkout</p><form onSubmit={submit}><label>Full name<input name="name" autoComplete="name" required minLength={2} maxLength={120} defaultValue={prefillName} /></label><label>Email address<input name="email" type="email" autoComplete="email" required maxLength={160} defaultValue={prefillEmail} /></label><button className="buy-button" disabled={loading}>{loading ? "Please wait…" : "Continue to secure payment"}</button>{error ? <p className="form-error">{error}</p> : null}<small>By continuing, you agree to our terms and digital delivery policy.</small></form>
+      <h2 id="checkout-title">Get your CareerPilot bundle.</h2><p className="modal-intro">Pay <strong>₹{checkoutPrice}</strong> securely through Razorpay.</p><div className="modal-order"><span>CareerPilot digital bundle</span><b>₹{checkoutPrice}</b></div><ul className="modal-assurances"><li>Secure payment through Razorpay.</li><li>Your digital resources will be delivered to your email.</li><li>7-day refund policy.</li></ul><form onSubmit={submit}><label>Full name<input name="name" autoComplete="name" required minLength={2} maxLength={120} defaultValue={prefillName} /></label><label>Email address<input name="email" type="email" autoComplete="email" required maxLength={160} defaultValue={prefillEmail} /></label><button className="buy-button" disabled={loading}>{loading ? "Please wait…" : "Continue to secure payment."}</button>{error ? <p className="form-error">{error}</p> : null}<small>By continuing, you agree to our terms and digital delivery policy.</small></form>
     </section></div>, document.body);
 }

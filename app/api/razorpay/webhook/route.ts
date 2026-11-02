@@ -2,6 +2,7 @@ import crypto from "node:crypto";
 import { NextResponse } from "next/server";
 import { capturedPayment, verifyWebhook } from "../../../../lib/razorpay";
 import { offerRpc } from "../../../../lib/launch-offer";
+import { deliverVerifiedPurchase } from "../../../../lib/purchase-delivery";
 import { supabaseRequest } from "../../../../lib/supabase";
 export async function POST(request: Request) {
   const rawBody = await request.text();
@@ -16,6 +17,8 @@ export async function POST(request: Request) {
       // Commit before acknowledging. DB failures return 503 for gateway retries.
       await offerRpc("record_launch_capture", { p_reservation_id:payment.reservationId,p_order_id:payment.orderId,p_payment_id:entity.id,p_amount:payment.amount,p_email:payment.email,
         p_event_id:request.headers.get("x-razorpay-event-id") || webhook.id || crypto.createHash("sha256").update(rawBody).digest("hex"),p_event_type:webhook.event,p_payload:webhook });
+      const delivery = await deliverVerifiedPurchase({ paymentId:entity.id,orderId:payment.orderId,amount:payment.amount,priceTier:payment.priceTier,name:payment.name,email:payment.email,requestUrl:request.url });
+      if (delivery.status === "processing") throw new Error("Verified purchase delivery is still processing");
     } else if (webhook.event === "payment.failed" && entity?.order_id) {
       await supabaseRequest(`checkout_attempts?razorpay_order_id=eq.${encodeURIComponent(entity.order_id)}&status=neq.captured`, { method:"PATCH",body:JSON.stringify({ status:"failed",updated_at:new Date().toISOString() }) });
     }

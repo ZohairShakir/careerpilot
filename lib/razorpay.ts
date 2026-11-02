@@ -53,10 +53,11 @@ export async function capturedPayment(paymentId: string, expectedOrderId?: strin
   const orderResponse = await fetch(`${API}/orders/${encodeURIComponent(payment.order_id)}`, { headers: { Authorization: authHeader() }, cache: "no-store" });
   if (!orderResponse.ok) throw new Error("Could not verify purchased product");
   const order = await orderResponse.json() as { amount: number; currency: string; notes?: Record<string,string> };
-  if (order.amount !== payment.amount || order.currency !== payment.currency || order.notes?.product !== "career-pilot-bundle") return null;
-  const tier = order.notes.price_tier;
-  return { amount: payment.amount, currency: payment.currency, orderId: payment.order_id, email: payment.email || null,
-    priceTier: (tier === "flash_100" || tier === "launch_149" || tier === "regular_299" ? tier : "legacy") as PriceTier, reservationId: order.notes.reservation_id || null };
+  const notes = order.notes;
+  if (order.amount !== payment.amount || order.currency !== payment.currency || notes?.product !== "career-pilot-bundle") return null;
+  const tier = notes.price_tier;
+  return { amount: payment.amount, currency: payment.currency, orderId: payment.order_id, name: notes.name || null, email: notes.email || payment.email || null,
+    priceTier: (tier === "flash_100" || tier === "launch_149" || tier === "regular_299" ? tier : "legacy") as PriceTier, reservationId: notes.reservation_id || null };
 }
 export function verifyWebhook(rawBody: string, signature: string) {
   const secret = process.env.RAZORPAY_WEBHOOK_SECRET;
