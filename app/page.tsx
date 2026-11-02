@@ -3,6 +3,7 @@ import Link from "next/link";
 import { headers } from "next/headers";
 import CreatorVideo from "./creator-video";
 import FlashOfferBar from "./flash-offer-bar";
+import MobileBuyBar from "./mobile-buy-bar";
 import OfferPrice, { LaunchFaq, OfferTerms, PurchaseTrust } from "./offer-price";
 import PurchaseButton from "./purchase-button";
 import ReadinessScorecard from "./readiness-scorecard";
@@ -54,14 +55,14 @@ export default async function Home() {
     <FlashOfferBar />
 
     <header className="conversion-nav shell">
-      <a className="wordmark" href="#top"><Mark />career pilot</a>
+      <PurchaseButton className="wordmark purchase-surface" ariaLabel="Open Career Pilot checkout" placement="header_logo"><Mark />career pilot</PurchaseButton>
       <nav aria-label="Primary navigation"><Link href="/job-fit-check">Resume Match</Link><Link href="/blog">Guides</Link><Link href="/free-ai-job-search-prompts">Free prompts</Link><a href="#inside">Bundle</a><a href="#faq">FAQ</a></nav>
       <PurchaseButton compact label="Get it now" />
     </header>
 
     <section className="conversion-hero shell" id="top">
       <div className="conversion-hero-copy">
-        <h1>Stop mass-applying.<br /><em>Start landing interviews.</em></h1>
+        <h1><PurchaseButton className="hero-heading-trigger purchase-surface" ariaLabel="Open checkout for the Career Pilot bundle" placement="hero_heading">Stop mass-applying.<br /><em>Start landing interviews.</em></PurchaseButton></h1>
         <p>Get a properly tailored, ATS-ready application done in 75 minutes—without guessing prompts, mass-applying, or starting from scratch.</p>
         <div className="conversion-hero-actions"><Link className="readiness-link" href="/job-fit-check">Check my résumé against a job — free</Link><div className="hero-purchase"><PurchaseButton label="Get it now" /></div></div>
         <PurchaseTrust />
@@ -102,7 +103,7 @@ export default async function Home() {
 
     <section className="conversion-final shell"><h2>Make your next<br />application intentional.</h2><p>Clearer roles. Stronger applications. A more focused you.</p><div><Link className="readiness-link outline" href="/job-fit-check">Run the free Resume Match Checker</Link><PurchaseButton label="Get it now" /></div></section>
 
-    <footer className="conversion-footer shell"><a className="wordmark" href="#top"><Mark />career pilot</a><p>A more focused you.</p><nav aria-label="Footer navigation"><Link href="/job-fit-check">Resume Match Checker</Link><Link href="/blog">Guides</Link><Link href="/free-ai-job-search-prompts">Free prompts</Link><Link href="/about">About</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/refund-policy">Refund policy</Link><Link href="/contact">Contact</Link></nav></footer>
-    <div className="mobile-buy-bar"><div><span>Complete bundle</span><OfferPrice kind="sticky" /></div><PurchaseButton compact label="Get it now" /></div>
+    <footer className="conversion-footer shell"><PurchaseButton className="wordmark purchase-surface" ariaLabel="Open Career Pilot checkout" placement="footer_logo"><Mark />career pilot</PurchaseButton><p>A more focused you.</p><nav aria-label="Footer navigation"><Link href="/job-fit-check">Resume Match Checker</Link><Link href="/blog">Guides</Link><Link href="/free-ai-job-search-prompts">Free prompts</Link><Link href="/about">About</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/refund-policy">Refund policy</Link><Link href="/contact">Contact</Link></nav></footer>
+    <MobileBuyBar />
   </main>;
 }
