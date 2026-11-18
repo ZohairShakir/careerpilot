@@ -7,6 +7,7 @@ import MobileBuyBar from "./mobile-buy-bar";
 import OfferPrice, { LaunchFaq, OfferTerms, PurchaseTrust } from "./offer-price";
 import PurchaseButton from "./purchase-button";
 import ReadinessScorecard from "./readiness-scorecard";
+import { ResourceFooter, ResourceHeader } from "./site-chrome";
 import { initialOfferStatus } from "../lib/launch-offer";
 import type { OfferStatus } from "../lib/offer-config";
 
@@ -40,7 +41,7 @@ function structuredDataFor(offer: OfferStatus) { return {
   "@graph": [
     { "@type": "Organization", "@id": "https://careerpilot.store/#organization", name: "Career Pilot", url: "https://careerpilot.store", email: "arkzlab@gmail.com" },
     { "@type": "WebSite", "@id": "https://careerpilot.store/#website", name: "Career Pilot", url: "https://careerpilot.store", publisher: { "@id": "https://careerpilot.store/#organization" } },
-    { "@type": "Product", "@id": "https://careerpilot.store/#product", name: "Career Pilot AI Job Search Bundle", description: "A six-resource AI job-search implementation system.", image: "https://careerpilot.store/assets/career-pilot-bundle-white.png", brand: { "@type": "Brand", name: "Career Pilot" }, offers: { "@type": "Offer", url: "https://careerpilot.store", priceCurrency: "INR", price: String(offer.currentPrice), availability: "https://schema.org/OnlineOnly", itemCondition: "https://schema.org/NewCondition" } },
+    { "@type": "Product", "@id": "https://careerpilot.store/bundle#product", name: "CareerPilot AI Job Search Bundle", description: "A six-resource AI job-search implementation system.", image: "https://careerpilot.store/assets/careerpilot-bundle-gallery.png", sku: "careerpilot-ai-job-search-bundle", brand: { "@type": "Brand", name: "CareerPilot" }, offers: { "@type": "Offer", url: "https://careerpilot.store/bundle", priceCurrency: "INR", price: String(offer.currentPrice), availability: "https://schema.org/InStock", itemCondition: "https://schema.org/NewCondition" } },
     { "@type": "FAQPage", mainEntity: faqs.map(([question, answer]) => ({ "@type": "Question", name: question, acceptedAnswer: { "@type": "Answer", text: answer } })) },
   ],
 }; }
@@ -54,11 +55,7 @@ export default async function Home() {
 
     <FlashOfferBar />
 
-    <header className="conversion-nav shell">
-      <PurchaseButton className="wordmark purchase-surface" ariaLabel="Open Career Pilot checkout" placement="header_logo"><Mark />career pilot</PurchaseButton>
-      <nav aria-label="Primary navigation"><Link href="/job-fit-check">Resume Match</Link><Link href="/blog">Guides</Link><Link href="/free-ai-job-search-prompts">Free prompts</Link><a href="#inside">Bundle</a><a href="#faq">FAQ</a></nav>
-      <PurchaseButton compact label="Get it now" />
-    </header>
+    <ResourceHeader />
 
     <section className="conversion-hero shell" id="top">
       <div className="conversion-hero-copy">
@@ -103,7 +100,7 @@ export default async function Home() {
 
     <section className="conversion-final shell"><h2>Make your next<br />application intentional.</h2><p>Clearer roles. Stronger applications. A more focused you.</p><div><Link className="readiness-link outline" href="/job-fit-check">Run the free Resume Match Checker</Link><PurchaseButton label="Get it now" /></div></section>
 
-    <footer className="conversion-footer shell"><PurchaseButton className="wordmark purchase-surface" ariaLabel="Open Career Pilot checkout" placement="footer_logo"><Mark />career pilot</PurchaseButton><p>A more focused you.</p><nav aria-label="Footer navigation"><Link href="/job-fit-check">Resume Match Checker</Link><Link href="/blog">Guides</Link><Link href="/free-ai-job-search-prompts">Free prompts</Link><Link href="/about">About</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/refund-policy">Refund policy</Link><Link href="/contact">Contact</Link></nav></footer>
+    <ResourceFooter />
     <MobileBuyBar />
   </main>;
 }
