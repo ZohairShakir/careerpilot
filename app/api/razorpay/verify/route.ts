@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { createDownloadToken } from "../../../../lib/downloads";
 import { offerRpc } from "../../../../lib/launch-offer";
 import { deliverVerifiedPurchase } from "../../../../lib/purchase-delivery";
 import { capturedPayment, verifyPaymentSignature } from "../../../../lib/razorpay";
@@ -33,12 +32,8 @@ export async function POST(request: Request) {
       console.error("Verified purchase email is pending", error instanceof Error ? error.message : error);
     }
     const expiresAt = Date.now() + 15 * 60 * 1000;
-    const labels = { blueprint: "AI Job Search Blueprint", quickStart: "Quick Start Guide", implementationPlan: "30-Day Implementation Plan", resume: "AI-Ready Resume Template", checklist: "AI Job Search Checklist", tracker: "Job Application Tracker" };
-    const productIds = Object.keys(labels) as Array<keyof typeof labels>;
-    const downloads = productIds.map(key => ({ label: labels[key], url: `/api/download?token=${encodeURIComponent(createDownloadToken(paymentId, key, expiresAt))}` }));
-    const bundleUrl = `/api/download?token=${encodeURIComponent(createDownloadToken(paymentId, "bundle", expiresAt))}`;
-    const response = NextResponse.json({ bundleUrl, downloads, emailDelivery, thankYouUrl: `/thank-you?delivery=${emailDelivery}` });
-    response.cookies.set(RECEIPT_COOKIE, createPurchaseReceipt({ paymentId, orderId, amount: payment.amount, priceTier: payment.priceTier, expiresAt }), {
+    const response = NextResponse.json({ emailDelivery, thankYouUrl: "/thank-you" });
+    response.cookies.set(RECEIPT_COOKIE, createPurchaseReceipt({ paymentId, orderId, amount: payment.amount, priceTier: payment.priceTier, deliveryStatus: emailDelivery === "sent" ? "sent" : "processing", expiresAt }), {
       httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", path: "/thank-you", maxAge: 15 * 60,
     });
     response.headers.set("Cache-Control", "no-store");

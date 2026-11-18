@@ -9,7 +9,7 @@ const vm = require('node:vm');
 const crypto = require('node:crypto');
 const ts = require('typescript');
 const { PGlite } = require(process.env.PGLITE_MODULE || path.join(os.tmpdir(), 'careerpilot-launch-test-deps/node_modules/@electric-sql/pglite'));
-const env = { RAZORPAY_KEY_ID: 'rzp_test_local', RAZORPAY_KEY_SECRET: 'test-secret', RAZORPAY_WEBHOOK_SECRET: 'webhook-secret', FLASH_OFFER_SECRET: 'flash-offer-test-secret', LAUNCH_ENABLED: 'true', LAUNCH_TEST_RUN: 'acceptance' };
+const env = { RAZORPAY_KEY_ID: 'rzp_test_local', RAZORPAY_KEY_SECRET: 'test-secret', RAZORPAY_WEBHOOK_SECRET: 'webhook-secret', FLASH_OFFER_SECRET: 'flash-offer-test-secret', DOWNLOAD_SIGNING_SECRET: 'download-test-secret', LAUNCH_ENABLED: 'true', LAUNCH_TEST_RUN: 'acceptance' };
 const modules = new Map(), orders = new Map(), payments = new Map();
 let db, unavailable = false, serial = 0;
 async function rpc(name, args) {
@@ -44,7 +44,7 @@ function load(file) {
   modules.set(file, exports);
   const code = ts.transpileModule(fs.readFileSync(file, 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, esModuleInterop: true, target: ts.ScriptTarget.ES2022 } }).outputText;
   vm.runInNewContext(code, { exports, Buffer, console, fetch: gateway, process: { env }, Request, Response, TextEncoder, TextDecoder, atob, btoa, crypto: crypto.webcrypto,
-    require: name => name === 'react' ? { cache: fn => fn } : name.endsWith('/supabase') || name === './supabase' ? { supabaseRequest } : name.startsWith('.') ? load(path.resolve(path.dirname(file), name + '.ts')) : require(name),
+    require: name => name === 'react' ? { cache: fn => fn } : name.endsWith('/supabase') || name === './supabase' ? { supabaseRequest } : name.endsWith('/purchase-delivery') || name === './purchase-delivery' ? { deliverVerifiedPurchase: async () => ({ status: 'sent' }) } : name.startsWith('.') ? load(path.resolve(path.dirname(file), name + '.ts')) : require(name),
   }, { filename: file });
   return exports;
 }
@@ -57,6 +57,7 @@ async function main() {
   }
   const orderRoute = load('app/api/razorpay/order/route.ts');
   const webhook = load('app/api/razorpay/webhook/route.ts');
+  const verifyRoute = load('app/api/razorpay/verify/route.ts');
   const offer = load('lib/launch-offer.ts');
   const statusRoute = load('app/api/offer-status/route.ts');
   const config = load('lib/offer-config.ts');
@@ -71,7 +72,23 @@ async function main() {
       'x-razorpay-event-id': eventId, 'x-razorpay-signature': signature ? crypto.createHmac('sha256', env.RAZORPAY_WEBHOOK_SECRET).update(raw).digest('hex') : 'bad',
     } }));
   }
+  async function clientVerify(order, signature = true) {
+    const payId = `pay_client_${order.orderId}`;
+    payments.set(payId, { status: 'captured', amount: order.amount, currency: 'INR', order_id: order.orderId, email: 'test@example.com' });
+    const paymentSignature = crypto.createHmac('sha256', env.RAZORPAY_KEY_SECRET).update(`${order.orderId}|${payId}`).digest('hex');
+    return verifyRoute.POST(new Request('http://localhost/api/razorpay/verify', { method: 'POST', body: JSON.stringify({ razorpay_order_id: order.orderId, razorpay_payment_id: payId, razorpay_signature: signature ? paymentSignature : 'bad' }) }));
+  }
   const flashToken = await flashOffer.createFlashOfferToken();
+  const browserCheckout = await order({}, flashToken);
+  const browserVerify = await clientVerify(browserCheckout);
+  assert.equal(browserVerify.status, 200);
+  const browserBody = await browserVerify.json();
+  assert.equal(browserBody.thankYouUrl, '/thank-you');
+  assert.equal('bundleUrl' in browserBody, false, 'verification response must not expose download links');
+  assert.equal('downloads' in browserBody, false, 'verification response must not expose individual download links');
+  assert.match(browserVerify.headers.get('set-cookie') || '', /HttpOnly/);
+  assert.match(browserVerify.headers.get('set-cookie') || '', /Path=\/thank-you/);
+  assert.equal((await clientVerify(await order({}, flashToken), false)).status, 400, 'invalid checkout signatures do not issue a receipt');
   const welcome = await order({ amount: 1 }, flashToken);
   assert.equal(welcome.amount, 10000); assert.equal(welcome.priceTier, 'flash_100');
   assert.equal((await capture(welcome)).status, 200);
@@ -80,12 +97,12 @@ async function main() {
   assert.equal(first.amount, 14900);
   assert.equal(first.priceTier, 'launch_149');
   assert.equal((await offer.getOfferStatus()).spotsLeft, 19);
-  assert.equal((await db.query('select count(*)::int as n from purchases')).rows[0].n, 1, 'creating the next order does not add another purchase');
+  assert.equal((await db.query('select count(*)::int as n from purchases')).rows[0].n, 2, 'creating the next order does not add another purchase');
   assert.equal((await capture(first, 'invalid', false)).status, 400);
   assert.equal((await capture(first)).status, 200);
   assert.equal((await capture(first)).status, 200);
   assert.equal((await capture(first, 'another_delivery')).status, 200);
-  assert.equal((await db.query('select count(*)::int as n from purchases')).rows[0].n, 2);
+  assert.equal((await db.query('select count(*)::int as n from purchases')).rows[0].n, 3);
   const stored = (await db.query('select * from checkout_attempts where razorpay_order_id=$1', [first.orderId])).rows[0];
   assert.equal(stored.utm_content, 'creative_01'); assert.equal(stored.price_tier, 'launch_149');
   assert.equal(orders.get(first.orderId).notes.utm_content, 'creative_01');

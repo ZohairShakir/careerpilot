@@ -7,11 +7,12 @@ import PurchaseSuccess from "./purchase-success";
 import { ResourceFooter, ResourceHeader } from "../site-chrome";
 
 export const metadata: Metadata = { title: "Thank you", robots: { index: false, follow: false }, alternates: { canonical: "/thank-you" } };
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
-export default async function ThankYouPage({ searchParams }: { searchParams: Promise<{ delivery?: string }> }) {
-  const delivery = (await searchParams).delivery === "sent" ? "sent" : "pending";
+export default async function ThankYouPage() {
   const receipt = readPurchaseReceipt((await cookies()).get(RECEIPT_COOKIE)?.value);
   if (!receipt) return <><ResourceHeader /><main className="shell thank-you-page"><h1>Your purchase downloads</h1><p>A recent verified purchase is required to access this page. If your download links expired, contact <a href="mailto:arkzlab@gmail.com">arkzlab@gmail.com</a> with your Razorpay payment ID.</p><Link className="text-link" href="/">Return to Career Pilot →</Link></main><ResourceFooter /></>;
   const downloads = Object.entries(products).map(([key, product]) => ({ label: product.downloadName, url: `/api/download?token=${encodeURIComponent(createDownloadToken(receipt.paymentId, key as keyof typeof products, receipt.expiresAt))}` }));
-  return <><ResourceHeader /><main className="shell thank-you-page"><PurchaseSuccess paymentId={receipt.paymentId} orderId={receipt.orderId} value={receipt.amount / 100} priceTier={receipt.priceTier || "legacy"} downloads={downloads} deliveryStatus={delivery} /><Link className="text-link" href="/">Return to Career Pilot →</Link></main><ResourceFooter /></>;
+  return <><ResourceHeader /><main className="thank-you-page"><PurchaseSuccess paymentId={receipt.paymentId} orderId={receipt.orderId} value={receipt.amount / 100} priceTier={receipt.priceTier || "legacy"} downloads={downloads} deliveryStatus={receipt.deliveryStatus} /><Link className="thank-you-return" href="/">Return to Career Pilot →</Link></main><ResourceFooter /></>;
 }

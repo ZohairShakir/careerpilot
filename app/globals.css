@@ -1263,9 +1263,34 @@ h1 em,h2 em { font-weight:400; }
   .fit-explainer h2,.fit-faq h2 { font-size:46px; }
 }
 
-.thank-you-page { max-width: 720px; padding-top: 80px; padding-bottom: 80px; }
-.thank-you-page h1 { font-size: clamp(2rem, 5vw, 3rem); line-height: 1.15; margin-bottom: 24px; }
-.thank-you-page .text-link { display: inline-block; margin-top: 32px; }
+.thank-you-page { width:min(100% - 40px,940px); margin:0 auto; padding:76px 0 92px; }
+.thank-you-page>h1 { font-size:clamp(2rem,5vw,3rem); line-height:1.15; margin-bottom:24px; }
+.thank-you-page .text-link,.thank-you-return { display:inline-block; margin-top:30px; color:var(--green); font-size:13px; font-weight:700; }
+.purchase-complete { max-width:760px; margin:0 auto; }
+.purchase-complete-intro { text-align:center; }
+.purchase-complete-mark { display:grid; place-items:center; width:42px; height:42px; margin:0 auto 16px; border-radius:50%; background:var(--green); color:#fff; font-size:21px; font-weight:700; box-shadow:0 0 0 8px rgba(54,88,70,.1); }
+.purchase-complete-intro>p,.purchase-download-card>div>p { margin:0; color:var(--green); font-size:11px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; }
+.purchase-complete-intro h1 { max-width:660px; margin:16px auto 12px; color:var(--ink); font:400 clamp(42px,6vw,68px)/.98 'Instrument Serif',serif; }
+.purchase-complete-intro>span:last-child { color:var(--muted); font-size:13px; }
+.purchase-download-card { display:grid; grid-template-columns:1fr auto; gap:20px 34px; align-items:center; margin:48px 0 0; padding:31px 34px 24px; border:1px solid var(--line); background:#fffdf9; box-shadow:0 16px 36px rgba(23,56,43,.08); }
+.purchase-download-card h2 { margin:8px 0; color:var(--ink); font:400 31px/1.05 'Instrument Serif',serif; }
+.purchase-download-card>div>span { color:var(--muted); font-size:13px; line-height:1.5; }
+.purchase-download-card .bundle-download { display:inline-flex; align-items:center; justify-content:center; gap:15px; min-height:56px; padding:0 25px; background:var(--green); color:#fff; font-size:14px; font-weight:700; transition:background .2s,transform .2s; white-space:nowrap; }
+.purchase-download-card .bundle-download:hover { background:var(--deep); transform:translateY(-1px); }
+.purchase-download-card>small { grid-column:1 / -1; padding-top:17px; border-top:1px solid var(--line); color:var(--muted); font-size:11px; }
+.purchase-delivery-status { display:grid; grid-template-columns:repeat(3,1fr); margin:24px 0 34px; border-block:1px solid var(--line); }
+.purchase-delivery-status article { display:grid; grid-template-columns:28px 1fr; gap:11px; min-height:103px; padding:21px 22px; border-left:1px solid var(--line); }
+.purchase-delivery-status article:first-child { border-left:0; padding-left:0; }
+.purchase-delivery-status article:last-child { padding-right:0; }
+.purchase-delivery-status article>span { display:grid; place-items:center; width:25px; height:25px; border-radius:50%; background:#e5eee3; color:var(--green); font-size:11px; font-weight:700; }
+.purchase-delivery-status b { display:block; margin:3px 0 5px; color:var(--ink); font-size:12px; }
+.purchase-delivery-status p { margin:0; color:var(--muted); font-size:11px; line-height:1.45; }
+.purchase-complete .individual-downloads { margin:0; }
+.purchase-complete .individual-downloads summary { color:var(--ink); }
+.purchase-complete .individual-downloads a { align-items:center; gap:18px; }
+.purchase-complete .individual-downloads a span { margin-left:auto; color:var(--green); }
+.purchase-help { margin:20px 0 0; color:var(--muted); font-size:12px; line-height:1.6; }
+.purchase-help a { color:var(--green); font-weight:700; text-decoration:underline; text-underline-offset:3px; }
 
 /* Launch pricing uses the existing purchase blocks. */
 .offer-pricing { display:block; }
@@ -1497,6 +1522,16 @@ h1 em,h2 em { font-weight:400; }
 }
 
 @media (max-width:600px) {
+  .thank-you-page { width:min(100% - 32px,560px); padding:48px 0 60px; }
+  .purchase-complete-intro h1 { font-size:46px; }
+  .purchase-download-card { grid-template-columns:1fr; gap:20px; margin-top:35px; padding:25px 20px 19px; }
+  .purchase-download-card h2 { font-size:29px; }
+  .purchase-download-card .bundle-download { width:100%; }
+  .purchase-delivery-status { display:block; margin-top:20px; }
+  .purchase-delivery-status article,.purchase-delivery-status article:first-child,.purchase-delivery-status article:last-child { min-height:0; padding:17px 0; border:0; border-top:1px solid var(--line); }
+  .purchase-delivery-status article:first-child { border-top:0; }
+  .purchase-complete .individual-downloads summary { min-height:58px; }
+  .purchase-complete .individual-downloads a { padding:15px 0; font-size:12px; }
   .conversion-page { padding-bottom:74px; }
   .flash-offer-inner { min-height:0; grid-template-columns:1fr auto; gap:8px 14px; padding-block:13px; }
   .flash-offer-message { display:block; grid-column:1; grid-row:1; }
