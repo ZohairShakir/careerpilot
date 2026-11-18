@@ -88,7 +88,7 @@ export default async function BundlePage() {
       <BundleGallery />
       <div className="bundle-summary">
         <p className="bundle-breadcrumb"><Link href="/">Home</Link><span>/</span>CareerPilot Bundle</p>
-        <h1>The AI Job Search<br />7-in-1 Bundle</h1>
+        <h1>The AI Job Search<br />6-in-1 Bundle</h1>
         <BundleOffer />
         <p className="bundle-description">Your practical system for choosing roles, tailoring applications, and staying consistent through the search.</p>
         <PurchaseButton className="bundle-primary-cta" label="Get the bundle" placement="bundle_product" />
