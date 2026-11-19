@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { headers } from "next/headers";
 import BundleGallery from "./bundle-gallery";
 import BundleOffer from "./bundle-offer";
 import { BundleReviews, BundleVideos } from "./bundle-proof";
 import BundleStickyBar from "./bundle-sticky-bar";
 import PurchaseButton from "../purchase-button";
 import { ResourceFooter, ResourceHeader } from "../site-chrome";
-import { initialOfferStatus } from "../../lib/launch-offer";
+import { initialDisplayOfferStatus } from "../../lib/launch-offer";
 import { planners } from "../../lib/planners";
 
 export const metadata: Metadata = {
@@ -77,8 +76,8 @@ function structuredDataFor(price: number) {
   };
 }
 
-export default async function BundlePage() {
-  const offer = await initialOfferStatus((await headers()).get("x-careerpilot-offer"));
+export default function BundlePage() {
+  const offer = initialDisplayOfferStatus();
 
   return <main className="bundle-page">
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredDataFor(offer.currentPrice)).replace(/</g, "\\u003c") }} />

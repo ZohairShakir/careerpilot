@@ -21,7 +21,13 @@ export default function OfferProvider({ initialOffer, children }: { initialOffer
     } catch { setOffer(previous => ({ ...previous, spotsLeft: null })); }
   }, []);
   useEffect(() => {
-    void refresh();
+    // Keep a slow offer lookup out of the critical mobile render path. The
+    // checkout order endpoint still calculates the authoritative amount.
+    if ("requestIdleCallback" in window) {
+      window.requestIdleCallback(() => { void refresh(); }, { timeout: 1500 });
+    } else {
+      setTimeout(() => { void refresh(); }, 600);
+    }
     const tick = () => { if (!document.hidden) void refresh(); };
     const timer = window.setInterval(tick, 20000);
     window.addEventListener("focus",tick);

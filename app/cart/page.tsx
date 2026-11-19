@@ -1,16 +1,15 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { headers } from "next/headers";
 import CartCheckout from "./cart-checkout";
 import { ResourceHeader } from "../site-chrome";
-import { initialOfferStatus } from "../../lib/launch-offer";
+import { initialDisplayOfferStatus } from "../../lib/launch-offer";
 
 export const metadata: Metadata = { title: "Your cart", description: "Review your CareerPilot bundle and continue to secure Razorpay payment.", robots: { index: false, follow: false } };
 
 export default async function CartPage({ searchParams }: { searchParams: Promise<{ placement?: string; source?: "job_fit_offer" }> }) {
   const { placement, source } = await searchParams;
-  const offer = await initialOfferStatus((await headers()).get("x-careerpilot-offer"));
+  const offer = initialDisplayOfferStatus();
   return <><ResourceHeader /><main className="cart-page"><div className="cart-shell">
     <header className="cart-heading"><p>Your order</p><Link href="/bundle">← Continue browsing</Link></header>
     <div className="cart-layout">

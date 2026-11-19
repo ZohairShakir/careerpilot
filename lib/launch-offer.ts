@@ -15,6 +15,23 @@ export const getOfferStatus = cache(async (): Promise<OfferStatus> => {
   const result = await offerRpc<{ launchActive: boolean; spotsLeft: number; currentPrice: number }>("launch_offer_status", offerParameters());
   return { ...result, fallbackPrice: result.currentPrice, regularPrice: OFFER_CONFIG.REGULAR_PRICE, flashActive: false, flashExpiresAt: null };
 });
+
+// Keep storefront rendering independent from the offer database. The exact
+// visitor price refreshes after the first paint and is recalculated again by
+// the order endpoint before Razorpay opens.
+export function initialDisplayOfferStatus(): OfferStatus {
+  const launchActive = launchEnabled();
+  const currentPrice = launchActive ? OFFER_CONFIG.LAUNCH_PRICE : OFFER_CONFIG.POST_LAUNCH_PRICE;
+  return {
+    launchActive,
+    spotsLeft: null,
+    currentPrice,
+    fallbackPrice: currentPrice,
+    regularPrice: OFFER_CONFIG.REGULAR_PRICE,
+    flashActive: false,
+    flashExpiresAt: null,
+  };
+}
 export async function effectiveOfferStatus(token?: string | null): Promise<OfferStatus> {
   const base = await getOfferStatus();
   const flash = await readFlashOffer(token);
@@ -25,11 +42,13 @@ export async function effectiveOfferStatus(token?: string | null): Promise<Offer
 export async function initialOfferStatus(token?: string | null): Promise<OfferStatus> {
   try { return await effectiveOfferStatus(token); }
   catch {
-    const currentPrice = launchEnabled() ? OFFER_CONFIG.LAUNCH_PRICE : OFFER_CONFIG.POST_LAUNCH_PRICE;
+    const fallback = initialDisplayOfferStatus();
     const flash = await readFlashOffer(token);
     return {
-      launchActive: launchEnabled(), spotsLeft: null, currentPrice: flash.active ? OFFER_CONFIG.FLASH_PRICE : currentPrice,
-      fallbackPrice: currentPrice, regularPrice: OFFER_CONFIG.REGULAR_PRICE, flashActive: flash.active, flashExpiresAt: flash.expiresAt,
+      ...fallback,
+      currentPrice: flash.active ? OFFER_CONFIG.FLASH_PRICE : fallback.currentPrice,
+      flashActive: flash.active,
+      flashExpiresAt: flash.expiresAt,
     };
   }
 }

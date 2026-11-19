@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { headers } from "next/headers";
 import CreatorVideo from "./creator-video";
 import FlashOfferBar from "./flash-offer-bar";
 import MobileBuyBar from "./mobile-buy-bar";
@@ -8,7 +7,7 @@ import OfferPrice, { LaunchFaq, OfferTerms, PurchaseTrust } from "./offer-price"
 import PurchaseButton from "./purchase-button";
 import ReadinessScorecard from "./readiness-scorecard";
 import { ResourceFooter, ResourceHeader } from "./site-chrome";
-import { initialOfferStatus } from "../lib/launch-offer";
+import { initialDisplayOfferStatus } from "../lib/launch-offer";
 import type { OfferStatus } from "../lib/offer-config";
 
 const resources = [
@@ -48,8 +47,8 @@ function structuredDataFor(offer: OfferStatus) { return {
 
 function Mark() { return <span className="mark" aria-hidden="true">✦</span>; }
 
-export default async function Home() {
-  const offer = await initialOfferStatus((await headers()).get("x-careerpilot-offer"));
+export default function Home() {
+  const offer = initialDisplayOfferStatus();
   return <main className="conversion-page">
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredDataFor(offer)).replace(/</g, "\\u003c") }} />
 

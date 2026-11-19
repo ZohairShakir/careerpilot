@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
 import "./globals.css";
 import AnalyticsProvider from "./analytics-provider";
 import GoogleAnalytics from "./google-analytics";
 import MicrosoftClarity from "./microsoft-clarity";
 import MetaPixel from "./meta-pixel";
 import OfferProvider from "./offer-provider";
-import { initialOfferStatus } from "../lib/launch-offer";
+import { initialDisplayOfferStatus } from "../lib/launch-offer";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://careerpilot.store"),
@@ -46,8 +45,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const offerToken = (await headers()).get("x-careerpilot-offer");
-  const offer = await initialOfferStatus(offerToken);
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const offer = initialDisplayOfferStatus();
   return <html lang="en"><head><link rel="preload" href="/fonts/dm-sans-latin-9fea608a.woff2" as="font" type="font/woff2" crossOrigin="anonymous" /><link rel="preload" href="/fonts/instrument-serif-latin-5eb09b5a.woff2" as="font" type="font/woff2" crossOrigin="anonymous" /></head><body><OfferProvider initialOffer={offer}>{children}<AnalyticsProvider /><GoogleAnalytics /><MicrosoftClarity /><MetaPixel /></OfferProvider></body></html>;
 }
