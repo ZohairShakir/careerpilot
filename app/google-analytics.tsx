@@ -2,10 +2,12 @@
 
 import Script from "next/script";
 import { usePathname } from "next/navigation";
+import { useDeferredThirdParty } from "./use-deferred-third-party";
 
 export default function GoogleAnalytics() {
   const id = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
   const pathname = usePathname();
+  const ready = useDeferredThirdParty();
   if (!id || pathname.startsWith("/admin")) return null;
   return <>
     <Script id="ga4" strategy="beforeInteractive">{`
@@ -15,6 +17,6 @@ export default function GoogleAnalytics() {
       gtag('js', new Date());
       gtag('config', '${id}', { anonymize_ip: true, send_page_view: false });
     `}</Script>
-    <Script src={`https://www.googletagmanager.com/gtag/js?id=${id}`} strategy="lazyOnload" />
+    {ready ? <Script src={`https://www.googletagmanager.com/gtag/js?id=${id}`} strategy="afterInteractive" /> : null}
   </>;
 }

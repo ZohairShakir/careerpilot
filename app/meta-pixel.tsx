@@ -2,6 +2,7 @@
 
 import Script from "next/script";
 import { usePathname } from "next/navigation";
+import { useDeferredThirdParty } from "./use-deferred-third-party";
 
 type Pixel = ((...args: unknown[]) => void) & { queue: unknown[][]; callMethod?: (...args: unknown[]) => void; push?: Pixel; loaded?: boolean; version?: string };
 declare global { interface Window { fbq?: Pixel; _fbq?: Pixel } }
@@ -31,6 +32,7 @@ export function pixel(event: string, value?: number, eventId?: string) {
 
 export default function MetaPixel() {
   const pathname = usePathname();
+  const ready = useDeferredThirdParty();
   if (pathname.startsWith("/admin")) return null;
-  return <Script id="meta-pixel" src="https://connect.facebook.net/en_US/fbevents.js" strategy="lazyOnload" />;
+  return ready ? <Script id="meta-pixel" src="https://connect.facebook.net/en_US/fbevents.js" strategy="afterInteractive" /> : null;
 }

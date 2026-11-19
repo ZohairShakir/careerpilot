@@ -18,7 +18,7 @@ const location = { pathname: '/', search: '', href: 'https://careerpilot.store/'
 const gaEvents = [];
 const window = { gtag: (...args) => gaEvents.push(args) };
 const context = { window, location, localStorage, crypto: require('node:crypto').webcrypto, URLSearchParams, document: { referrer: '', title: 'Bundle' }, navigator: { sendBeacon: () => true } };
-const { pixel } = load('app/meta-pixel.tsx', context, { 'next/navigation': {}, 'next/script': {} });
+const { pixel } = load('app/meta-pixel.tsx', context, { 'next/navigation': {}, 'next/script': {}, './use-deferred-third-party': { useDeferredThirdParty: () => true } });
 const { track, analyticsContext } = load('app/analytics.ts', context, { './meta-pixel': { pixel }, '../lib/offer-config': load('lib/offer-config.ts', { process }) });
 track('page_view', { value: 149, price_tier: 'launch_149' });
 assert.equal(window.fbq.queue[0][2], false, 'manual mode must precede initialization');

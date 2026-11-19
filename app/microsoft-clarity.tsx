@@ -2,14 +2,18 @@
 
 import Script from "next/script";
 import { usePathname } from "next/navigation";
+import { useDeferredThirdParty } from "./use-deferred-third-party";
 
 export default function MicrosoftClarity() {
   const projectId = process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID;
   const pathname = usePathname();
+  const ready = useDeferredThirdParty();
   if (!projectId || pathname.startsWith("/admin")) return null;
 
+  if (!ready) return null;
+
   return (
-    <Script id="microsoft-clarity" strategy="lazyOnload">{`
+    <Script id="microsoft-clarity" strategy="afterInteractive">{`
       (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
         t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
