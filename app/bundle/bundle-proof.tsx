@@ -69,9 +69,7 @@ export function BundleVideos() {
   return <section className="bundle-video-section" aria-label="CareerPilot videos">
     <div className="bundle-video-rail">
         {videos.map((video, index) => <button type="button" className="bundle-video-card" key={video.src} aria-label={`Open ${video.label} in reel viewer`} onClick={() => setViewerIndex(index)}>
-          <video muted playsInline preload="none" poster={video.poster} aria-label={video.label}>
-            <source src={video.src} type="video/mp4" />
-          </video>
+          <video muted playsInline preload="none" poster={video.poster} aria-label={video.label} />
           <span className="bundle-video-play" aria-hidden="true">▶</span>
         </button>)}
     </div>
